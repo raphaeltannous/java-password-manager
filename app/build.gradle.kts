@@ -46,8 +46,3 @@ tasks.jar {
   }
   from(configurations.runtimeClasspath.get().map { if (it.isDirectory) it else zipTree(it) })
 }
-
-tasks.named<Test>("test") {
-    // Use JUnit Platform for unit tests.
-    useJUnitPlatform()
-}
