@@ -8,9 +8,12 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * PasswordManagerCSV
+ */
 public class PasswordManagerCSV implements PasswordManagerInterface {
     private static final String CSV_FILE = "passwords.csv";
-    private static final String CSV_SPLIT_BY = "؟"; // , is in the PUNCTUATION_CHARS
+    private static final String CSV_SPLIT_BY = "؟"; // , is in the PUNCTUATION_CHARS.
 
     public void addPassword(String website, String username, String password) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(CSV_FILE, true))) {
@@ -27,6 +30,7 @@ public class PasswordManagerCSV implements PasswordManagerInterface {
             String line;
             int passwordIndex = 0;
 
+            // Reading passwords line by line from CSV
             while ((line = br.readLine()) != null) {
                 String[] csvData = line.split(CSV_SPLIT_BY);
                 int csvDataLength = csvData.length;

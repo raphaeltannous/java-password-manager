@@ -2,6 +2,9 @@ package com.raphaeltannous;
 
 import java.security.SecureRandom;
 
+/**
+ * SecurePasswordGenerator
+ */
 public class SecurePasswordGenerator {
 
     // Defining the characters to be used

@@ -10,6 +10,8 @@ import java.io.RandomAccessFile;
 
 /**
  * SettingsTUI
+ *
+ * Settings' API for the TUI application.
  */
 public class SettingsTUI implements SettingsInterface {
     private static final String filePath = "settingsTUI.txt";
@@ -18,7 +20,7 @@ public class SettingsTUI implements SettingsInterface {
     public SettingsTUI() {
         File file = new File(filePath);
 
-        // If the settings file doesn't exists create a new settings file
+        // If the settings file doesn't exists create a new settings file.
         if (!(file.exists() && !file.isDirectory())) {
             try (
                 BufferedWriter writer = new BufferedWriter(new FileWriter(filePath));
@@ -40,7 +42,7 @@ public class SettingsTUI implements SettingsInterface {
     };
 
     public String getCurrentDatabase() {
-        String databaseSetting = defaultDatabase; // Default storage
+        String databaseSetting = defaultDatabase; // Default storage.
 
         try (
             BufferedReader reader = new BufferedReader(new FileReader(filePath));
@@ -62,6 +64,7 @@ public class SettingsTUI implements SettingsInterface {
             String[] options = getDatabaseOptions();
             String currentSetting = file.readLine().trim();
 
+            // Choosing from the options.
             for (int i = 0; i < options.length; i++) {
                 System.out.print("Index: " + (i + 1) + ", Options: " + options[i]);
 
@@ -74,6 +77,7 @@ public class SettingsTUI implements SettingsInterface {
 
             int choice = UserInput.readIntFromRange("Index to use: ", 1, options.length);
 
+            // Setting new option.
             file.seek(0);
             file.setLength(options[choice - 1].length());
             file.writeBytes(options[choice - 1]);

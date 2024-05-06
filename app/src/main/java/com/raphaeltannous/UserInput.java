@@ -5,13 +5,9 @@ import java.util.Scanner;
 /**
  * UserInput
  *
- * All the application uses the UserInput.scanner,
- * because once the scanner is closed it can inflect
- * conflict and errors on all other scanners.
- * Because when the scanner is closed it also closes
- * the underlying stream.
+ * Provides the functions necessary to get
+ * user input.
  *
- * https://stackoverflow.com/questions/15398703/exception-in-thread-main-java-util-nosuchelementexception
  */
 public class UserInput {
     public static Scanner scanner = new Scanner(System.in);
