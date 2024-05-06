@@ -12,19 +12,20 @@ import java.util.List;
 
 /**
  * PasswordManagerSQLite
- *
  */
 public class PasswordManagerSQLite implements PasswordManagerInterface {
     private final String databaseFilename = "passwords.db";
 
-    // Prepared Statements
+    // Prepared Statements.
     private final String addPasswordStatement = "INSERT INTO Manager (website, username, password)"
                                               + " VALUES (?, ?, ?);";
     private final String updatePasswordStatement = "UPDATE Manager SET password = ? WHERE id = ?;";
     private final String deletePasswordStatement = "DELETE FROM Manager WHERE id = ?;";
 
+    // Constructor and database initializer.
     public PasswordManagerSQLite() {
         try (
+            // By default if there's no database file the sqlite-jdbc will create one.
             Connection connection = DriverManager.getConnection("jdbc:sqlite:" + databaseFilename);
             Statement statement = connection.createStatement();
         ) {
@@ -33,6 +34,7 @@ public class PasswordManagerSQLite implements PasswordManagerInterface {
             DatabaseMetaData dmd = connection.getMetaData();
             ResultSet rs = dmd.getTables(null, null, "%", null);
 
+            // Checking if the manager's table is present.
             boolean isManagerAvailable = false;
             while (rs.next()) {
                 if (rs.getString(4).equalsIgnoreCase("TABLE") && rs.getString(3).equals("Manager")) {
@@ -41,7 +43,7 @@ public class PasswordManagerSQLite implements PasswordManagerInterface {
                 }
             }
 
-            // If there's no table, create a new one
+            // If there's no table, create a new one.
             if (!isManagerAvailable) {
                 statement.executeUpdate(
                     "CREATE TABLE Manager ("

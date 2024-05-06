@@ -2,10 +2,14 @@ package com.raphaeltannous;
 
 import java.util.List;
 
+/**
+ * App
+ */
 public class App {
     public static void main(String[] args) {
         SettingsInterface settings = new SettingsTUI();
 
+        // Command's prompt
         while (true) {
             String command = UserInput.readCommand("Command (type 'help' for help): ");
 
@@ -75,6 +79,7 @@ public class App {
     }
 
     private static void runSettings(SettingsInterface settings) {
+        // Settings' prompt
         loop: while (true) {
             String settingsCommand = UserInput.readCommand("Settings' Command (type 'help' for help): ");
 
@@ -119,6 +124,7 @@ public class App {
     }
 
     private static void runManager(SettingsInterface settings) {
+        // Manager's prompt
         String whichPasswordManager = settings.getCurrentDatabase();
         PasswordManagerInterface passwordManager;
 
