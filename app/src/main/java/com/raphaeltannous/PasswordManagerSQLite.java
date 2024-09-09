@@ -17,8 +17,7 @@ public class PasswordManagerSQLite implements PasswordManagerInterface {
     private final String databaseFilename = "passwords.db";
 
     // Prepared Statements.
-    private final String addPasswordStatement = "INSERT INTO Manager (website, username, password)"
-                                              + " VALUES (?, ?, ?);";
+    private final String addPasswordStatement = "INSERT INTO Manager (website, username, password)"+ " VALUES (?, ?, ?);";
     private final String updatePasswordStatement = "UPDATE Manager SET password = ? WHERE id = ?;";
     private final String deletePasswordStatement = "DELETE FROM Manager WHERE id = ?;";
 
