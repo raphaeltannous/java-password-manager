@@ -1,11 +1,59 @@
 package com.raphaeltannous;
 
+import java.sql.Connection;
+import java.sql.DatabaseMetaData;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
+import org.sqlite.mc.SQLiteMCSqlCipherConfig;
+
 import java.util.List;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 /**
  * PasswordManagerInterface
  */
 public interface PasswordManagerInterface {
+
+    public static boolean isFileADB(Path databasePath, String databasePassword) {
+        boolean isTablesAvailable = false;
+
+        if (Files.exists(databasePath)) {
+            try (
+                Connection connection = SQLiteMCSqlCipherConfig.getV4Defaults().withKey(databasePassword).build().createConnection("jdbc:sqlite:file:" + databasePath.normalize());
+                Statement statement = connection.createStatement();
+            ) {
+                statement.setQueryTimeout(30);
+
+                DatabaseMetaData dmd = connection.getMetaData();
+                ResultSet rs = dmd.getTables(null, null, "%", null);
+
+                // Checking if the `Passwords`'s table is present.
+                boolean isPasswordsTableAvailable = false;
+                boolean isBackupCodesTableAvaible = false;
+                while (rs.next()) {
+                    if (rs.getString(4).equalsIgnoreCase("TABLE") && rs.getString(3).equals("passwords")) {
+                        isPasswordsTableAvailable = true;
+                    }
+
+                    if (rs.getString(4).equalsIgnoreCase("TABLE") && rs.getString(3).equals("backupCodes")) {
+                        isBackupCodesTableAvaible = true;
+                    }
+                }
+
+                isTablesAvailable = isPasswordsTableAvailable && isBackupCodesTableAvaible;
+            } catch (SQLException e) {
+                return false;
+            }
+        } else {
+            return false;
+        }
+
+        return isTablesAvailable;
+    };
 
     public List<String[]> fetchPasswords();
 
