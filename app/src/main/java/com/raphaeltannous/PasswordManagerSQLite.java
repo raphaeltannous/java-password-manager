@@ -8,10 +8,11 @@ import java.sql.SQLDataException;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import org.sqlite.mc.SQLiteMCSqlCipherConfig;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import org.sqlite.mc.SQLiteMCSqlCipherConfig;
+
 import java.nio.file.Files;
 import java.nio.file.Path;
 
