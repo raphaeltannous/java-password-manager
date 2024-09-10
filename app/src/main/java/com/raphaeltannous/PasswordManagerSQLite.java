@@ -13,7 +13,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import java.nio.file.Path;
-import java.nio.file.Files;
 
 /**
  * PasswordManagerSQLite
@@ -105,9 +104,11 @@ public class PasswordManagerSQLite implements PasswordManagerInterface {
         this.databasePassword = databasePassword;
         this.databaseURL = "jdbc:sqlite:file:" + this.databasePath;
 
-        if (Files.exists(this.databasePath)) {
-            // TODO: Check if the file is a database.
-            // TODO: Check if the password is correct.
+        if (!PasswordManagerInterface.isFileADB(this.databasePath, this.databasePassword)) {
+            throw new IllegalArgumentException(
+                "Failed establishing a connection to the database.\n"
+                + "The PasswordManagerInterface provides isFileADB() function to check before initializing."
+            );
         }
 
         try (
