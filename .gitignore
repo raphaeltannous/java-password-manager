@@ -24,3 +24,6 @@ gradle-app.setting
 
 *.log
 *.class
+
+kls_database.db
+app/*.db
