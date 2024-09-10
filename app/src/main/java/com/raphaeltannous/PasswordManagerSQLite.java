@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLDataException;
 import java.sql.SQLException;
 import java.sql.Statement;
 
@@ -134,13 +135,24 @@ public class PasswordManagerSQLite implements PasswordManagerInterface {
             DatabaseMetaData dmd = connection.getMetaData();
             ResultSet rs = dmd.getTables(null, null, "%", null);
 
-            // Checking if the `Passwords`'s table is present.
+            // Checking if the tables `Passwords` and `backupCodes` are present.
             boolean isPasswordsTableAvailable = false;
+            boolean isBackupCodesTableAvaible = false;
+            boolean isTablesAvailable = false;
             while (rs.next()) {
                 if (rs.getString(4).equalsIgnoreCase("TABLE") && rs.getString(3).equals("passwords")) {
                     isPasswordsTableAvailable = true;
-                    break;
                 }
+
+                if (rs.getString(4).equalsIgnoreCase("TABLE") && rs.getString(3).equals("backupCodes")) {
+                    isBackupCodesTableAvaible = true;
+                }
+            }
+
+            isTablesAvailable = isPasswordsTableAvailable && isBackupCodesTableAvaible;
+
+            if (isPasswordsTableAvailable || isBackupCodesTableAvaible) {
+                throw new SQLDataException("database's tables are messed up.");
             }
 
             // If there's no table, create a new one.
@@ -163,7 +175,7 @@ public class PasswordManagerSQLite implements PasswordManagerInterface {
             //   FOREIGN KEY (passwordId) REFERENCES passwords(id)
             // );
 
-            if (!isPasswordsTableAvailable) {
+            if (!isTablesAvailable) {
                 statement.executeUpdate(
                     "CREATE TABLE passwords ("
                     + "id INTEGER NOT NULL PRIMARY KEY, "
