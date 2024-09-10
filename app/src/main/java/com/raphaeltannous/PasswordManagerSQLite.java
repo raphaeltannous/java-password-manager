@@ -11,7 +11,7 @@ import org.sqlite.mc.SQLiteMCSqlCipherConfig;
 
 import java.util.ArrayList;
 import java.util.List;
-
+import java.nio.file.Files;
 import java.nio.file.Path;
 
 /**
@@ -95,6 +95,16 @@ public class PasswordManagerSQLite implements PasswordManagerInterface {
         + "WHERE id = ?;"
     );
 
+    private final String isPasswordInDBStatement = (
+        "SELECT id FROM passwords "
+        + "WHERE id = ?;"
+    );
+
+    private final String isBackupCodeInDBStatement = (
+        "SELECT id FROM backupCodes "
+        + "WHERE id = ?;"
+    );
+
     // Constructor and database initializer.
     public PasswordManagerSQLite(
         Path databasePath,
@@ -104,7 +114,10 @@ public class PasswordManagerSQLite implements PasswordManagerInterface {
         this.databasePassword = databasePassword;
         this.databaseURL = "jdbc:sqlite:file:" + this.databasePath;
 
-        if (!PasswordManagerInterface.isFileADB(this.databasePath, this.databasePassword)) {
+        if (
+            !PasswordManagerInterface.isFileADB(this.databasePath, this.databasePassword) &&
+            Files.exists(this.databasePath)
+        ) {
             throw new IllegalArgumentException(
                 "Failed establishing a connection to the database.\n"
                 + "The PasswordManagerInterface provides isFileADB() function to check before initializing."
@@ -212,6 +225,18 @@ public class PasswordManagerSQLite implements PasswordManagerInterface {
     }
 
     public void addPassword(String website, String username, String password) {
+        if (website == "") {
+            throw new IllegalArgumentException("website cannot be empty.");
+        }
+
+        if (username == "") {
+            throw new IllegalArgumentException("username cannot be empty.");
+        }
+
+        if (password == "") {
+            throw new IllegalArgumentException("password cannot be empty.");
+        }
+
         try (
             Connection connection = databaseConfig.withKey(this.databasePassword).build().createConnection(this.databaseURL);
             PreparedStatement statement = connection.prepareStatement(addPasswordStatement);
@@ -228,7 +253,38 @@ public class PasswordManagerSQLite implements PasswordManagerInterface {
         }
     }
 
+    private boolean isPasswordInDB(int passwordId) {
+        try (
+            Connection connection = databaseConfig.withKey(this.databasePassword).build().createConnection(this.databaseURL);
+            PreparedStatement statement = connection.prepareStatement(isPasswordInDBStatement);
+        ) {
+            statement.setQueryTimeout(30);
+
+            statement.setInt(1, passwordId);
+
+            ResultSet rs = statement.executeQuery();
+
+            int fetchedPasswordId = rs.getInt("id");
+
+            if (passwordId == fetchedPasswordId) {
+                return true;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace(System.err);
+        }
+
+        return false;
+    }
+
     public void modifyWebsite(int passwordId, String newWebsite) {
+        if (newWebsite == "") {
+            throw new IllegalArgumentException("newWebsite cannot be empty.");
+        }
+
+        if (!isPasswordInDB(passwordId)) {
+            throw new IllegalArgumentException("password is not in the databse.");
+        }
+
         try (
             Connection connection = databaseConfig.withKey(this.databasePassword).build().createConnection(this.databaseURL);
             PreparedStatement statement = connection.prepareStatement(updateWebsiteStatement);
@@ -245,6 +301,14 @@ public class PasswordManagerSQLite implements PasswordManagerInterface {
     }
 
     public void modifyUsername(int passwordId, String newUsername) {
+        if (newUsername ==  "") {
+            throw new IllegalArgumentException("newUsername cannot be empty.");
+        }
+
+        if (!isPasswordInDB(passwordId)) {
+            throw new IllegalArgumentException("password is not in the databse.");
+        }
+
         try (
             Connection connection = databaseConfig.withKey(this.databasePassword).build().createConnection(this.databaseURL);
             PreparedStatement statement = connection.prepareStatement(updateUsernameStatement);
@@ -261,6 +325,14 @@ public class PasswordManagerSQLite implements PasswordManagerInterface {
     }
 
     public void modifyPassword(int passwordId, String newPassword) {
+        if (newPassword == "") {
+            throw new IllegalArgumentException("newPassword cannot be empty.");
+        }
+
+        if (!isPasswordInDB(passwordId)) {
+            throw new IllegalArgumentException("password is not in the databse.");
+        }
+
         try (
             Connection connection = databaseConfig.withKey(this.databasePassword).build().createConnection(this.databaseURL);
             PreparedStatement statement = connection.prepareStatement(updatePasswordStatement);
@@ -277,6 +349,10 @@ public class PasswordManagerSQLite implements PasswordManagerInterface {
     }
 
     public void deletePassword(int passwordId) {
+        if (!isPasswordInDB(passwordId)) {
+            throw new IllegalArgumentException("password is not in the databse.");
+        }
+
         try (
             Connection connection = databaseConfig.withKey(this.databasePassword).build().createConnection(this.databaseURL);
             PreparedStatement statement = connection.prepareStatement(deletePasswordStatement);
@@ -292,6 +368,10 @@ public class PasswordManagerSQLite implements PasswordManagerInterface {
     }
 
     public String fetchOTP(int passwordId) {
+        if (!isPasswordInDB(passwordId)) {
+            throw new IllegalArgumentException("password is not in the databse.");
+        }
+
         String otp = "";
 
         try (
@@ -313,6 +393,10 @@ public class PasswordManagerSQLite implements PasswordManagerInterface {
     }
 
     public void modifyOTP(int passwordId, String newOTP) {
+        if (!isPasswordInDB(passwordId)) {
+            throw new IllegalArgumentException("password is not in the databse.");
+        }
+
         try (
             Connection connection = databaseConfig.withKey(this.databasePassword).build().createConnection(this.databaseURL);
             PreparedStatement statement = connection.prepareStatement(updateOTPStatement);
@@ -329,6 +413,10 @@ public class PasswordManagerSQLite implements PasswordManagerInterface {
     }
 
     public String fetchNote(int passwordId) {
+        if (!isPasswordInDB(passwordId)) {
+            throw new IllegalArgumentException("password is not in the databse.");
+        }
+
         String note = "";
 
         try (
@@ -351,6 +439,10 @@ public class PasswordManagerSQLite implements PasswordManagerInterface {
     }
 
     public void modifyNote(int passwordId, String newNote) {
+        if (!isPasswordInDB(passwordId)) {
+            throw new IllegalArgumentException("password is not in the databse.");
+        }
+
         try (
             Connection connection = databaseConfig.withKey(this.databasePassword).build().createConnection(this.databaseURL);
             PreparedStatement statement = connection.prepareStatement(updateNoteStatement);
@@ -367,6 +459,10 @@ public class PasswordManagerSQLite implements PasswordManagerInterface {
     }
 
     public List<String[]> fetchBackupCodes(int passwordId) {
+        if (!isPasswordInDB(passwordId)) {
+            throw new IllegalArgumentException("password is not in the databse.");
+        }
+
         List<String[]> backupCodes = new ArrayList<>();
 
         try (
@@ -397,6 +493,10 @@ public class PasswordManagerSQLite implements PasswordManagerInterface {
     }
 
     public void addBackupCode(int passwordId, String backupCode) {
+        if (!isPasswordInDB(passwordId)) {
+            throw new IllegalArgumentException("password is not in the databse.");
+        }
+
         try (
             Connection connection = databaseConfig.withKey(this.databasePassword).build().createConnection(this.databaseURL);
             PreparedStatement statement = connection.prepareStatement(addBackupCodeStatement);
@@ -412,7 +512,34 @@ public class PasswordManagerSQLite implements PasswordManagerInterface {
         }
     }
 
+    private boolean isBackupCodeInDB(int backupCodeId) {
+        try (
+            Connection connection = databaseConfig.withKey(this.databasePassword).build().createConnection(this.databaseURL);
+            PreparedStatement statement = connection.prepareStatement(isBackupCodeInDBStatement);
+        ) {
+            statement.setQueryTimeout(30);
+
+            statement.setInt(1, backupCodeId);
+
+            ResultSet rs = statement.executeQuery();
+
+            int fetchedPasswordId = rs.getInt("id");
+
+            if (backupCodeId == fetchedPasswordId) {
+                return true;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace(System.err);
+        }
+
+        return false;
+    }
+
     public void removeBackupCode(int backupCodeId) {
+        if (!isBackupCodeInDB(backupCodeId)) {
+            throw new IllegalArgumentException("backup code is not in the database.");
+        }
+
         try (
             Connection connection = databaseConfig.withKey(this.databasePassword).build().createConnection(this.databaseURL);
             PreparedStatement statement = connection.prepareStatement(removeBackupCodeStatement);
@@ -428,6 +555,10 @@ public class PasswordManagerSQLite implements PasswordManagerInterface {
     }
 
     public void updateBackupCodeStatus(int backupCodeId, int status) {
+        if (!isBackupCodeInDB(backupCodeId)) {
+            throw new IllegalArgumentException("backup code is not in the database.");
+        }
+
         try (
             Connection connection = databaseConfig.withKey(this.databasePassword).build().createConnection(this.databaseURL);
             PreparedStatement statement = connection.prepareStatement(updateBackupCodeStatusStatement);
@@ -444,6 +575,10 @@ public class PasswordManagerSQLite implements PasswordManagerInterface {
     }
 
     public void updateHasBackupCodeStatus(int passwordId, int status) {
+        if (!isPasswordInDB(passwordId)) {
+            throw new IllegalArgumentException("password is not in the databse.");
+        }
+
         try (
             Connection connection = databaseConfig.withKey(this.databasePassword).build().createConnection(this.databaseURL);
             PreparedStatement statement = connection.prepareStatement(updateHasBackupCodeStatusStatement);
