@@ -18,10 +18,11 @@ repositories {
 }
 
 dependencies {
-    // This dependency is used by the application.
-    implementation("org.xerial:sqlite-jdbc:3.45.3.0")
+    implementation("io.github.willena:sqlite-jdbc:3.46.0.1")
     implementation("org.slf4j:slf4j-api:1.7.36")
     implementation("ch.qos.logback:logback-classic:1.2.5")
+
+    testImplementation("org.junit.jupiter:junit-jupiter:5.8.1")
 }
 
 // Apply a specific Java toolchain to ease working on different environments.
@@ -41,6 +42,9 @@ application {
     mainClass = "com.raphaeltannous.App"
 }
 
+tasks.test {
+    useJUnitPlatform()
+}
 
 tasks.jar {
   manifest {
