@@ -116,9 +116,9 @@ class PasswordManagerSQLiteTest {
 
         boolean postFetchOTP = db.fetchOTP(1).equals("86a1809af1db");
 
-        boolean fetchOTPResult = preFetchOTP && postFetchOTP;
+        boolean otpResult = preFetchOTP && postFetchOTP;
 
-        if (!fetchOTPResult) {
+        if (!otpResult) {
             System.out.println("Something went wrong in OTP (preFetchOTP postFetchOTP): ");
             System.out.println(preFetchOTP + " " + postFetchOTP);
         }
@@ -130,24 +130,54 @@ class PasswordManagerSQLiteTest {
 
         boolean postFetchNote = db.fetchNote(3).equals("instagram note");
 
-        boolean fetchNoteResult = preFetchNote && postFetchNote;
+        boolean noteResult = preFetchNote && postFetchNote;
 
-        if (!fetchNoteResult) {
+        if (!noteResult) {
             System.out.println("Something went wrong in Note (preFetchNote postFetchNote): ");
             System.out.println(preFetchNote + " " + postFetchNote);
         }
 
-        // TODO: Add testing for these functions
-        // - fetchBackupCodes
-        // - addBackupCode
-        // - removeBackupCode
-        // - updateBackupCodeStatus
-        // - updateHasBackupCodeStatus
+        // Adding backup codes for password 1
+        List<String[]> preFetchedBackupCodes = db.fetchBackupCodes(1);
+
+        List<String[]> expectedPreFetchedBackupCodes = new ArrayList<>();
+
+        boolean preFetchBackupCodesStatus = isListEqualList(preFetchedBackupCodes, expectedPreFetchedBackupCodes);
+
+        db.addBackupCode(1, "5774d4761370");
+
+        // Chaning Has Backup Code Status
+        db.updateHasBackupCodeStatus(1, 1);
+
+        db.addBackupCode(1, "6e56a0a66191");
+
+        db.updateBackupCodeStatus(2, 1); // 6e56a0a66191
+
+        // Removing backup code 1
+        db.removeBackupCode(1);
+
+        List<String[]> postFetchedBackupCodes = db.fetchBackupCodes(1);
+
+        List<String[]> expectedPostFetchedBackupCodes = new ArrayList<>();
+
+        expectedPostFetchedBackupCodes.add(
+            new String[] {
+                "2",
+                "1",
+                "6e56a0a66191",
+                "1"
+            }
+        );
+
+        boolean postFetchBackupCodesStatus = isListEqualList(postFetchedBackupCodes, expectedPostFetchedBackupCodes);
+
+        boolean backupCodesResult = preFetchBackupCodesStatus && postFetchBackupCodesStatus;
 
         assertTrue(
             isListEqualList(expectedFetchedPasswords, fetchedPasswords) &&
-            fetchOTPResult &&
-            fetchNoteResult
+            otpResult &&
+            noteResult &&
+            backupCodesResult
         );
     }
 }
