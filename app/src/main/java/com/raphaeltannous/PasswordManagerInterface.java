@@ -18,6 +18,9 @@ import java.nio.file.Path;
  */
 public interface PasswordManagerInterface {
 
+    // You should use isFileABD() before initializing an instance.
+    // If you initialize without checking and the file is not a database,
+    // it will throw an exception.
     public static boolean isFileADB(Path databasePath, String databasePassword) {
         boolean isTablesAvailable = false;
 
@@ -70,7 +73,7 @@ public interface PasswordManagerInterface {
 
     public void deletePassword(int passwordId);
 
-    public String fetchOTP(int passwordId);
+    public String fetchOTP(int passwordId); // otp doesn't exists if otp is ""
     public void modifyOTP(int passwordId, String newOTP); // if newOTP is empty, then remove OTP
 
     public String fetchNote(int passwordId); // note doesn't exists if note is ""
