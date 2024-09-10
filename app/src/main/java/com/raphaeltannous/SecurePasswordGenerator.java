@@ -1,40 +1,45 @@
 package com.raphaeltannous;
 
 import java.security.SecureRandom;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * SecurePasswordGenerator
  */
 public class SecurePasswordGenerator {
-
     // Defining the characters to be used
     // when generating the password.
-    private final String LOWER_CASE_CHARS = "abcdefghijklmnopqrstuvwxyz";
-    private final String UPPER_CASE_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    private final String DIGITS_CHARS = "0123456789";
-    private final String PUNCTUATION_CHARS = "!@#$%&*()_+-=[]|,./?><";
+    public static final String LOWER_CASE_CHARS = "abcdefghijklmnopqrstuvwxyz";
+    public static final String UPPER_CASE_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    public static final String DIGITS_CHARS = "0123456789";
+    public static final String PUNCTUATION_CHARS = "!@#$%&*()_+-=[]|,./?><";
 
-    private Boolean useLowerChars;
-    private Boolean useUpperChars;
-    private Boolean useDigitsChars;
-    private Boolean usePunctuationChars;
-
-    // Constructor
-    public SecurePasswordGenerator(
-        Boolean useLowerChars,
-        Boolean useUpperChars,
-        Boolean useDigitsChars,
-        Boolean usePunctuationChars
-    ) {
-        this.useLowerChars = useLowerChars;
-        this.useUpperChars = useUpperChars;
-        this.useDigitsChars = useDigitsChars;
-        this.usePunctuationChars = usePunctuationChars;
+    public static int maxNumberofWhitesSpaces(int length) {
+        return (int) Math.ceil(length * 0.15);
     }
 
-    public String generatePassword(int length) {
+    public static String generatePassword(
+        int length,
+        int numberOfWhiteSpaces,
+        boolean useLower,
+        boolean useUpper,
+        boolean useDigits,
+        boolean usePunctuation
+    ) {
         if (length < 16) {
-            return "Length should be greater than 16.";
+            throw new IllegalArgumentException("length should be greater or equal 16.");
+        }
+
+        // 15% of the code can be spaces
+        if (numberOfWhiteSpaces > maxNumberofWhitesSpaces(length)) {
+           throw new IllegalArgumentException("number of white spaces cannot exeed 15% of the length.");
+        }
+
+        if (
+            (useLower || useUpper || useDigits || usePunctuation) == false
+        ) {
+           throw new IllegalArgumentException("At least enable useLower, useUpper, useDigits or usePunctuation");
         }
 
         StringBuilder password = new StringBuilder();
@@ -42,22 +47,37 @@ public class SecurePasswordGenerator {
 
         String charsToUse = "";
 
-        if (useLowerChars) {
+        if (useLower) {
             charsToUse += LOWER_CASE_CHARS;
         }
-        if (useUpperChars) {
+        if (useUpper) {
             charsToUse += UPPER_CASE_CHARS;
         }
-        if (useDigitsChars) {
+        if (useDigits) {
             charsToUse += DIGITS_CHARS;
         }
-        if (usePunctuationChars) {
+        if (usePunctuation) {
             charsToUse += PUNCTUATION_CHARS;
         }
 
-        for (int i = 0; i < length; i++) {
-                int randomIndex = random.nextInt(charsToUse.length());
-                password.append(charsToUse.charAt(randomIndex));
+        for (int i = 0; i < length - numberOfWhiteSpaces; i++) {
+            int randomIndex = random.nextInt(charsToUse.length());
+            password.append(charsToUse.charAt(randomIndex));
+        }
+
+        List<Integer> usedNumbers = new ArrayList<>();
+
+        int i = 0;
+        while (i < numberOfWhiteSpaces) {
+            int randomIndex = random.nextInt(1, length - 1);
+
+            if (usedNumbers.indexOf(randomIndex) != -1) {
+                continue;
+            }
+
+            usedNumbers.add(randomIndex);
+            password.insert(randomIndex, " ");
+            i++;
         }
 
         return password.toString();
