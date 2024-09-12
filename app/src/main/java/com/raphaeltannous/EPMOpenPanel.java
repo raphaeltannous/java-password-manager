@@ -5,6 +5,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 
+import com.formdev.flatlaf.FlatClientProperties;
+
 import net.miginfocom.swing.MigLayout;
 
 /**
@@ -13,12 +15,16 @@ import net.miginfocom.swing.MigLayout;
 public class EPMOpenPanel extends JPanel {
     EPMFrame frame;
 
+    private JPasswordField passwordField;
+
     EPMOpenPanel(
         EPMFrame frame
     ) {
         this.frame = frame;
 
         initPanelComponents();
+
+        passwordField.putClientProperty(FlatClientProperties.STYLE, "showRevealButton: true");
     }
 
 	private void initPanelComponents() {
@@ -29,7 +35,7 @@ public class EPMOpenPanel extends JPanel {
 
         JLabel filePathLabel = new JLabel();
 
-        JPasswordField passwordField = new JPasswordField();
+        passwordField = new JPasswordField();
 
         JButton chooseFilePathButton = new JButton();
         JButton openDatabaseButton = new JButton();

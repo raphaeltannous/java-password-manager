@@ -10,7 +10,13 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.KeyStroke;
+import javax.swing.UIManager;
 import javax.swing.WindowConstants;
+
+import com.formdev.flatlaf.FlatClientProperties;
+import com.formdev.flatlaf.FlatLaf;
+import com.formdev.flatlaf.extras.FlatSVGIcon;
+import com.formdev.flatlaf.extras.FlatSVGUtils;
 
 /**
  * EPMFrame
@@ -23,7 +29,7 @@ public class EPMFrame extends JFrame {
     protected Container contentPane;
 
     EPMFrame() {
-        // TODO: setIconImages FlatSVGUtils
+        setIconImages(FlatSVGUtils.createWindowIconImages("/com/raphaeltannous/epm.svg"));
 
         initFrameComponents();
     }
@@ -31,7 +37,7 @@ public class EPMFrame extends JFrame {
     private void initFrameComponents() {
         menuBar = new JMenuBar();
 
-        JMenu fileMenu = new JMenu();
+        JMenu databaseMenu = new JMenu();
         JMenuItem createMenuItem = new JMenuItem();
         JMenuItem openMenuItem = new JMenuItem();
         closeMenuItem = new JMenuItem();
@@ -54,41 +60,45 @@ public class EPMFrame extends JFrame {
 
             // fileMenu
             {
-                fileMenu.setText("File");
-                fileMenu.setMnemonic('F');
+                databaseMenu.setText("Database");
+                databaseMenu.setMnemonic('D');
 
                 // createMenuItem
                 createMenuItem.setText("Create");
                 createMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, InputEvent.CTRL_DOWN_MASK));
                 createMenuItem.setMnemonic('N');
+                createMenuItem.setIcon(new FlatSVGIcon("com/raphaeltannous/icons/plus.svg"));
                 createMenuItem.addActionListener(e -> createActionListener());
-                fileMenu.add(createMenuItem);
+                databaseMenu.add(createMenuItem);
 
                 // openMenuItem
                 openMenuItem.setText("Open");
                 openMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, InputEvent.CTRL_DOWN_MASK));
                 openMenuItem.setMnemonic('O');
+                openMenuItem.setIcon(new FlatSVGIcon("com/raphaeltannous/icons/folder-plus.svg"));
                 openMenuItem.addActionListener(e -> openActionListener());
-                fileMenu.add(openMenuItem);
-                fileMenu.addSeparator();
+                databaseMenu.add(openMenuItem);
+                databaseMenu.addSeparator();
 
                 // closeMenuItem
                 closeMenuItem.setText("Close");
                 closeMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_W, InputEvent.CTRL_DOWN_MASK));
                 closeMenuItem.setMnemonic('C');
+                closeMenuItem.setIcon(new FlatSVGIcon("com/raphaeltannous/icons/x.svg"));
                 closeMenuItem.setEnabled(false);
                 closeMenuItem.addActionListener(e -> closeActionListener());
-                fileMenu.add(closeMenuItem);
-                fileMenu.addSeparator();
+                databaseMenu.add(closeMenuItem);
+                databaseMenu.addSeparator();
 
                 // exitMenuItem
                 exitMenuItem.setText("Exit");
                 exitMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q, InputEvent.CTRL_DOWN_MASK));
                 exitMenuItem.setMnemonic('X');
+                exitMenuItem.setIcon(new FlatSVGIcon("com/raphaeltannous/icons/door-open.svg"));
                 exitMenuItem.addActionListener(e -> exitActionListener());
-                fileMenu.add(exitMenuItem);
+                databaseMenu.add(exitMenuItem);
             }
-            menuBar.add(fileMenu);
+            menuBar.add(databaseMenu);
 
 
             // helpMenu
@@ -100,12 +110,14 @@ public class EPMFrame extends JFrame {
                 documentationMenuItem.setText("Documentation");
                 documentationMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_D, InputEvent.CTRL_DOWN_MASK));
                 documentationMenuItem.setMnemonic('D');
+                documentationMenuItem.setIcon(new FlatSVGIcon("com/raphaeltannous/icons/question.svg"));
                 documentationMenuItem.addActionListener(e -> documentationActionListener());
                 helpMenu.add(documentationMenuItem);
 
                 // aboutMenuItem
                 aboutMenuItem.setText("About");
                 aboutMenuItem.setMnemonic('A');
+                aboutMenuItem.setIcon(new FlatSVGIcon("com/raphaeltannous/icons/info-circle.svg"));
                 aboutMenuItem.addActionListener(e -> aboutActionListener());
                 helpMenu.add(aboutMenuItem);
             }
@@ -134,23 +146,20 @@ public class EPMFrame extends JFrame {
         EPMOpenAndCreatePanel openAndCreatePanel = new EPMOpenAndCreatePanel(this);
         contentPane.removeAll();
         contentPane.add(openAndCreatePanel);
-        contentPane.revalidate();
-        contentPane.repaint();
+        FlatLaf.revalidateAndRepaintAllFramesAndDialogs();
 	}
 
 	private void openActionListener() {
         EPMOpenPanel openPanel = new EPMOpenPanel(this);
         contentPane.removeAll();
         contentPane.add(openPanel);
-        contentPane.revalidate();
-        contentPane.repaint();
+        FlatLaf.revalidateAndRepaintAllFramesAndDialogs();
 	}
 
 	private void createActionListener() {
         EPMCreatePanel createPanel = new EPMCreatePanel(this);
         contentPane.removeAll();
         contentPane.add(createPanel);
-        contentPane.revalidate();
-        contentPane.repaint();
+        FlatLaf.revalidateAndRepaintAllFramesAndDialogs();
 	}
 }
