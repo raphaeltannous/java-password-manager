@@ -173,7 +173,7 @@ public class EPMCreatePanel extends JPanel {
     }
 
     private boolean checkIfFilenameInDir(String filename, Path directory) {
-        Path filePath = Paths.get(directory.toAbsolutePath().toString(), filename + ".db");
+        Path filePath = Paths.get(directory.toAbsolutePath().toString(), filename + ".epm");
 
         return Files.exists(filePath);
     }
@@ -189,7 +189,7 @@ public class EPMCreatePanel extends JPanel {
 	}
 
 	private void createActionListener() {
-        Path filePath = Paths.get(chosenPath.toAbsolutePath().toString(), databaseFilenameTextField.getText() + ".db");
+        Path filePath = Paths.get(chosenPath.toAbsolutePath().toString(), databaseFilenameTextField.getText() + ".epm");
 
         PasswordManagerInterface db = new PasswordManagerSQLite(
             filePath,
