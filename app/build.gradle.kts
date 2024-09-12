@@ -21,6 +21,9 @@ dependencies {
     implementation("io.github.willena:sqlite-jdbc:3.46.0.1")
     implementation("org.slf4j:slf4j-api:1.7.36")
     implementation("ch.qos.logback:logback-classic:1.2.5")
+    implementation("com.formdev:flatlaf:3.5.1")
+    implementation("com.formdev:flatlaf-extras:3.5.1")
+    implementation("com.miglayout:miglayout-swing:5.3")
 
     testImplementation("org.junit.jupiter:junit-jupiter:5.8.1")
 }
