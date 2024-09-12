@@ -6,6 +6,8 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
+import com.formdev.flatlaf.FlatClientProperties;
+
 import net.miginfocom.swing.MigLayout;
 
 /**
@@ -25,6 +27,9 @@ public class EPMCreatePanel extends JPanel {
         this.frame = frame;
 
         initPanelComponents();
+
+        passwordField.putClientProperty(FlatClientProperties.STYLE, "showRevealButton: true");
+        confirmPasswordField.putClientProperty(FlatClientProperties.STYLE, "showRevealButton: true");
     }
 
 	private void initPanelComponents() {

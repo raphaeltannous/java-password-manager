@@ -3,6 +3,8 @@ package com.raphaeltannous;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
+import com.formdev.flatlaf.FlatLaf;
+
 import net.miginfocom.swing.MigLayout;
 
 /**
@@ -45,15 +47,13 @@ public class EPMOpenAndCreatePanel extends JPanel {
         EPMOpenPanel openPanel = new EPMOpenPanel(this.frame);
         frame.contentPane.removeAll();
         frame.contentPane.add(openPanel);
-        frame.contentPane.revalidate();
-        frame.contentPane.repaint();
+        FlatLaf.revalidateAndRepaintAllFramesAndDialogs();
 	}
 
 	private void createActionListener() {
         EPMCreatePanel createPanel = new EPMCreatePanel(this.frame);
         frame.contentPane.removeAll();
         frame.contentPane.add(createPanel);
-        frame.contentPane.revalidate();
-        frame.contentPane.repaint();
+        FlatLaf.revalidateAndRepaintAllFramesAndDialogs();
 	}
 }
