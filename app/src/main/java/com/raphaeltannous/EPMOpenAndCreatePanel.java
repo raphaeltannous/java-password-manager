@@ -31,29 +31,15 @@ public class EPMOpenAndCreatePanel extends JPanel {
         this.setLayout(new MigLayout());
 
         createButton.setText("Create");
-        createButton.setMnemonic('N');
+        createButton.setMnemonic('C');
         createButton.setDisplayedMnemonicIndex(0);
-        createButton.addActionListener(e -> createActionListener());
+        createButton.addActionListener(e -> frame.createActionListener());
         add(createButton, "cell 0 0");
 
         openButton.setText("Open");
-        createButton.setMnemonic('O');
+        openButton.setMnemonic('O');
         openButton.setDisplayedMnemonicIndex(0);
-        openButton.addActionListener(e -> openActionListener());
+        openButton.addActionListener(e -> frame.openActionListener());
         add(openButton, "cell 1 0");
-    }
-
-    private void openActionListener() {
-        EPMOpenPanel openPanel = new EPMOpenPanel(this.frame);
-        frame.contentPane.removeAll();
-        frame.contentPane.add(openPanel, "align center");
-        FlatLaf.revalidateAndRepaintAllFramesAndDialogs();
-    }
-
-    private void createActionListener() {
-        EPMCreatePanel createPanel = new EPMCreatePanel(this.frame);
-        frame.contentPane.removeAll();
-        frame.contentPane.add(createPanel, "align center");
-        FlatLaf.revalidateAndRepaintAllFramesAndDialogs();
     }
 }
