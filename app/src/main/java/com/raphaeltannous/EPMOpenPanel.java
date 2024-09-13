@@ -124,14 +124,13 @@ public class EPMOpenPanel extends JPanel {
                 String.valueOf(passwordField.getPassword())
             )
         ) {
-
-            frame.contentPane.removeAll();
-
             EPMPasswordsPanel passwordsPanel = new EPMPasswordsPanel(
                 this.frame,
                 chosenFile,
                 String.valueOf(passwordField.getPassword())
             );
+
+            frame.contentPane.removeAll();
 
             frame.contentPane.add(passwordsPanel, "grow");
 
