@@ -1,7 +1,6 @@
 package com.raphaeltannous;
 
 import java.awt.Container;
-import java.awt.GridBagLayout;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 
@@ -10,13 +9,13 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.KeyStroke;
-import javax.swing.UIManager;
 import javax.swing.WindowConstants;
 
-import com.formdev.flatlaf.FlatClientProperties;
 import com.formdev.flatlaf.FlatLaf;
 import com.formdev.flatlaf.extras.FlatSVGIcon;
 import com.formdev.flatlaf.extras.FlatSVGUtils;
+
+import net.miginfocom.swing.MigLayout;
 
 /**
  * EPMFrame
@@ -53,7 +52,7 @@ public class EPMFrame extends JFrame {
         this.setSize(777, 333);
         this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         contentPane = getContentPane();
-        contentPane.setLayout(new GridBagLayout());
+        contentPane.setLayout(new MigLayout("insets 0, fill"));
 
         // menuBar
         {
@@ -125,7 +124,7 @@ public class EPMFrame extends JFrame {
         }
         setJMenuBar(menuBar);
 
-        contentPane.add(openAndCreatePanel);
+        contentPane.add(openAndCreatePanel, "align center");
     }
 
 	private Object aboutActionListener() {
@@ -145,21 +144,21 @@ public class EPMFrame extends JFrame {
 	private void closeActionListener() {
         EPMOpenAndCreatePanel openAndCreatePanel = new EPMOpenAndCreatePanel(this);
         contentPane.removeAll();
-        contentPane.add(openAndCreatePanel);
+        contentPane.add(openAndCreatePanel, "align center");
         FlatLaf.revalidateAndRepaintAllFramesAndDialogs();
 	}
 
 	private void openActionListener() {
         EPMOpenPanel openPanel = new EPMOpenPanel(this);
         contentPane.removeAll();
-        contentPane.add(openPanel);
+        contentPane.add(openPanel, "align center");
         FlatLaf.revalidateAndRepaintAllFramesAndDialogs();
 	}
 
 	private void createActionListener() {
         EPMCreatePanel createPanel = new EPMCreatePanel(this);
         contentPane.removeAll();
-        contentPane.add(createPanel);
+        contentPane.add(createPanel, "align center");
         FlatLaf.revalidateAndRepaintAllFramesAndDialogs();
 	}
 }
