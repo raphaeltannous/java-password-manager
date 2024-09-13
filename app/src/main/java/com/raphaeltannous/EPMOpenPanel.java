@@ -21,7 +21,7 @@ import net.miginfocom.swing.MigLayout;
  * EPMOpenPanel
  */
 public class EPMOpenPanel extends JPanel {
-    EPMFrame frame;
+    private EPMFrame frame;
 
     private JLabel authenticationLabel;
     private JLabel filePathLabel;
@@ -126,6 +126,15 @@ public class EPMOpenPanel extends JPanel {
         ) {
 
             frame.contentPane.removeAll();
+
+            EPMPasswordsPanel passwordsPanel = new EPMPasswordsPanel(
+                this.frame,
+                chosenFile,
+                String.valueOf(passwordField.getPassword())
+            );
+
+            frame.contentPane.add(passwordsPanel, "grow");
+
             FlatLaf.revalidateAndRepaintAllFramesAndDialogs();
 
             return;
@@ -135,8 +144,6 @@ public class EPMOpenPanel extends JPanel {
 
         authenticationLabel.setText("Wrong Credentials...");
         authenticationLabel.setForeground(Color.RED);
-
-        // TODO: Change screen when Implemented
 	}
 
 	private void chooseActionListener() {
