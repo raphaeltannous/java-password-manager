@@ -36,9 +36,9 @@ java {
 }
 
 // To accept input from the user, when run gradle run.
-tasks.named<JavaExec>("run") {
-    standardInput = System.`in`
-}
+// tasks.named<JavaExec>("run") {
+//     standardInput = System.`in`
+// }
 
 application {
     // Define the main class for the application.
@@ -50,8 +50,11 @@ tasks.test {
 }
 
 tasks.jar {
+  duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+
   manifest {
     attributes["Main-Class"] = application.mainClass.get()
   }
+
   from(configurations.runtimeClasspath.get().map { if (it.isDirectory) it else zipTree(it) })
 }
