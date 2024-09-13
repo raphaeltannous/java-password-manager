@@ -22,9 +22,15 @@ import net.miginfocom.swing.MigLayout;
  */
 public class EPMFrame extends JFrame {
     private JMenuBar menuBar;
+
     private JMenuItem exitMenuItem;
     protected JMenuItem closeMenuItem;
     private JMenuItem aboutMenuItem;
+
+    protected JMenuItem newPasswordMenuItem;
+    protected JMenuItem editPasswordMenuItem;
+    protected JMenuItem deletePasswordMenuItem;
+
     protected Container contentPane;
 
     EPMFrame() {
@@ -40,6 +46,11 @@ public class EPMFrame extends JFrame {
         JMenuItem createMenuItem = new JMenuItem();
         JMenuItem openMenuItem = new JMenuItem();
         closeMenuItem = new JMenuItem();
+
+        JMenu toolsMenu = new JMenu();
+        newPasswordMenuItem = new JMenuItem();
+        editPasswordMenuItem = new JMenuItem();
+        deletePasswordMenuItem = new JMenuItem();
 
         JMenu helpMenu = new JMenu();
         JMenuItem documentationMenuItem = new JMenuItem();
@@ -99,6 +110,34 @@ public class EPMFrame extends JFrame {
             }
             menuBar.add(databaseMenu);
 
+            // toolsMenu
+            {
+                toolsMenu.setText("Tools");
+                toolsMenu.setMnemonic('T');
+
+                // addPasswordMenuItem
+                newPasswordMenuItem.setText("New Password");
+                newPasswordMenuItem.setMnemonic('A');
+                newPasswordMenuItem.setIcon(new FlatSVGIcon("com/raphaeltannous/icons/plus-square.svg"));
+                newPasswordMenuItem.setEnabled(false);
+                toolsMenu.add(newPasswordMenuItem);
+
+                // editPasswordMenuItem
+                editPasswordMenuItem.setText("Edit Password");
+                editPasswordMenuItem.setMnemonic('E');
+                editPasswordMenuItem.setIcon(new FlatSVGIcon("com/raphaeltannous/icons/pencil-square.svg"));
+                editPasswordMenuItem.setEnabled(false);
+                toolsMenu.add(editPasswordMenuItem);
+                toolsMenu.addSeparator();
+
+                // deletePasswordMenuItem
+                deletePasswordMenuItem.setText("Delete Password");
+                deletePasswordMenuItem.setMnemonic('D');
+                deletePasswordMenuItem.setIcon(new FlatSVGIcon("com/raphaeltannous/icons/x-square.svg"));
+                deletePasswordMenuItem.setEnabled(false);
+                toolsMenu.add(deletePasswordMenuItem);
+            }
+            menuBar.add(toolsMenu);
 
             // helpMenu
             {
@@ -148,14 +187,14 @@ public class EPMFrame extends JFrame {
         FlatLaf.revalidateAndRepaintAllFramesAndDialogs();
     }
 
-    private void openActionListener() {
+    protected void openActionListener() {
         EPMOpenPanel openPanel = new EPMOpenPanel(this);
         contentPane.removeAll();
         contentPane.add(openPanel, "align center");
         FlatLaf.revalidateAndRepaintAllFramesAndDialogs();
     }
 
-    private void createActionListener() {
+    protected void createActionListener() {
         EPMCreatePanel createPanel = new EPMCreatePanel(this);
         contentPane.removeAll();
         contentPane.add(createPanel, "align center");
