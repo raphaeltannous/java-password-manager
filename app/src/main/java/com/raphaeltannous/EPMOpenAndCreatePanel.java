@@ -43,17 +43,17 @@ public class EPMOpenAndCreatePanel extends JPanel {
         add(openButton, "cell 1 0");
     }
 
-	private void openActionListener() {
+    private void openActionListener() {
         EPMOpenPanel openPanel = new EPMOpenPanel(this.frame);
         frame.contentPane.removeAll();
         frame.contentPane.add(openPanel, "align center");
         FlatLaf.revalidateAndRepaintAllFramesAndDialogs();
-	}
+    }
 
-	private void createActionListener() {
+    private void createActionListener() {
         EPMCreatePanel createPanel = new EPMCreatePanel(this.frame);
         frame.contentPane.removeAll();
         frame.contentPane.add(createPanel, "align center");
         FlatLaf.revalidateAndRepaintAllFramesAndDialogs();
-	}
+    }
 }
