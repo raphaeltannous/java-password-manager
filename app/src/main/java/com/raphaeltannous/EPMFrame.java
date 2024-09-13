@@ -117,7 +117,10 @@ public class EPMFrame extends JFrame {
 
                 // addPasswordMenuItem
                 newPasswordMenuItem.setText("New Password");
-                newPasswordMenuItem.setMnemonic('A');
+                // newPasswordMenuItem.setMnemonic('A');
+                // BUG: For some reasons when the letter a is written in the dialog,
+                // it will also be taken as a keyboard shortcut and call the dialog
+                // once again.
                 newPasswordMenuItem.setIcon(new FlatSVGIcon("com/raphaeltannous/icons/plus-square.svg"));
                 newPasswordMenuItem.setEnabled(false);
                 toolsMenu.add(newPasswordMenuItem);
