@@ -4,6 +4,8 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -46,7 +48,17 @@ class PasswordManagerSQLiteTest {
 
     @Test
     void passwordsTest() {
-        Path databasePath = Paths.get("passwords.db");
+        Path databasePath = Paths.get("/home/calculus/Downloads/passwords.db");
+
+        if (Files.exists(databasePath)) {
+            try {
+                Files.delete(databasePath);
+            } catch (IOException e) {
+                System.out.println("PATH CANNOT BE DELETED.");
+                e.printStackTrace();
+            }
+        }
+
         String databasePassword = "123";
 
         PasswordManagerSQLite db = new PasswordManagerSQLite(
