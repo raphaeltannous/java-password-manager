@@ -58,6 +58,7 @@ public interface PasswordManagerInterface {
     };
 
     public List<String[]> fetchPasswords();
+    public int getPasswordsCount();
 
     // Website/Username/Password are required to be in a password and they cannot be empty.
     public void addPassword(

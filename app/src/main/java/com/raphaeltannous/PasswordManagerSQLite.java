@@ -237,6 +237,29 @@ public class PasswordManagerSQLite implements PasswordManagerInterface {
         return passwords;
     }
 
+    public int getPasswordsCount() {
+        int count = 0;
+
+        try (
+            Connection connection = databaseConfig.withKey(this.databasePassword).build().createConnection(this.databaseURL);
+            Statement statement = connection.createStatement();
+        ) {
+            statement.setQueryTimeout(30);
+
+            ResultSet rs = statement.executeQuery(
+                "SELECT COUNT(*) FROM passwords;"
+            );
+
+            if (rs.next()) {
+                count = rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace(System.err);
+        }
+
+        return count;
+    }
+
     public void addPassword(String website, String username, String password) {
         if (website == "") {
             throw new IllegalArgumentException("website cannot be empty.");
