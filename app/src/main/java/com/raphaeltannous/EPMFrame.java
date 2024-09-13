@@ -127,38 +127,38 @@ public class EPMFrame extends JFrame {
         contentPane.add(openAndCreatePanel, "align center");
     }
 
-	private Object aboutActionListener() {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Unimplemented method 'aboutActionListener'");
-	}
+    private Object aboutActionListener() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'aboutActionListener'");
+    }
 
-	private Object documentationActionListener() {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Unimplemented method 'documentationActionListener'");
-	}
+    private Object documentationActionListener() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'documentationActionListener'");
+    }
 
-	private void exitActionListener() {
+    private void exitActionListener() {
         dispose();
-	}
+    }
 
-	private void closeActionListener() {
+    private void closeActionListener() {
         EPMOpenAndCreatePanel openAndCreatePanel = new EPMOpenAndCreatePanel(this);
         contentPane.removeAll();
         contentPane.add(openAndCreatePanel, "align center");
         FlatLaf.revalidateAndRepaintAllFramesAndDialogs();
-	}
+    }
 
-	private void openActionListener() {
+    private void openActionListener() {
         EPMOpenPanel openPanel = new EPMOpenPanel(this);
         contentPane.removeAll();
         contentPane.add(openPanel, "align center");
         FlatLaf.revalidateAndRepaintAllFramesAndDialogs();
-	}
+    }
 
-	private void createActionListener() {
+    private void createActionListener() {
         EPMCreatePanel createPanel = new EPMCreatePanel(this);
         contentPane.removeAll();
         contentPane.add(createPanel, "align center");
         FlatLaf.revalidateAndRepaintAllFramesAndDialogs();
-	}
+    }
 }

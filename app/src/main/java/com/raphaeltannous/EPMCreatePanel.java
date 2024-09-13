@@ -49,7 +49,7 @@ public class EPMCreatePanel extends JPanel {
         confirmPasswordField.putClientProperty(FlatClientProperties.STYLE, "showRevealButton: true");
     }
 
-	private void initPanelComponents() {
+    private void initPanelComponents() {
         // Enabling closeMenuItem
         frame.closeMenuItem.setEnabled(true);
 
@@ -119,9 +119,9 @@ public class EPMCreatePanel extends JPanel {
         createDatabaseButton.setEnabled(false);
     }
 
-	private void passwordFieldChangeListener() {
+    private void passwordFieldChangeListener() {
         confirmPasswordFieldChangeListener();
-	}
+    }
 
     private void confirmPasswordFieldChangeListener() {
         if (!passwordsConfirmation()) {
@@ -133,9 +133,9 @@ public class EPMCreatePanel extends JPanel {
         }
 
         checkCreateButtonStatus();
-	}
+    }
 
-	private boolean passwordsConfirmation() {
+    private boolean passwordsConfirmation() {
         if (
             passwordField.getPassword().length == 0 ||
             confirmPasswordField.getPassword().length == 0
@@ -178,7 +178,7 @@ public class EPMCreatePanel extends JPanel {
         return Files.exists(filePath);
     }
 
-	private void databaseFilenameTextFieldChangeListener() {
+    private void databaseFilenameTextFieldChangeListener() {
         if (!filenameRestrictionCheck()) {
             databaseFilenameTextField.putClientProperty("JComponent.outline", "error");
         } else {
@@ -186,9 +186,9 @@ public class EPMCreatePanel extends JPanel {
         }
 
         checkCreateButtonStatus();
-	}
+    }
 
-	private void createActionListener() {
+    private void createActionListener() {
         Path filePath = Paths.get(chosenPath.toAbsolutePath().toString(), databaseFilenameTextField.getText() + ".epm");
 
         PasswordManagerInterface db = new PasswordManagerSQLite(
@@ -200,9 +200,9 @@ public class EPMCreatePanel extends JPanel {
         FlatLaf.revalidateAndRepaintAllFramesAndDialogs();
 
         // TODO: Change screen when Implemented
-	}
+    }
 
-	private void choosePathActionListener() {
+    private void choosePathActionListener() {
         JFileChooser pathChooser = new JFileChooser();
 
         pathChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
@@ -219,5 +219,5 @@ public class EPMCreatePanel extends JPanel {
         }
 
         checkCreateButtonStatus();
-	}
+    }
 }
