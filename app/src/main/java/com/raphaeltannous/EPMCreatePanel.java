@@ -191,15 +191,16 @@ public class EPMCreatePanel extends JPanel {
     private void createActionListener() {
         Path filePath = Paths.get(chosenPath.toAbsolutePath().toString(), databaseFilenameTextField.getText() + ".epm");
 
-        PasswordManagerInterface db = new PasswordManagerSQLite(
+        EPMPasswordsPanel passwordsPanel = new EPMPasswordsPanel(
+            this.frame,
             filePath,
             String.valueOf(passwordField.getPassword())
         );
 
         frame.contentPane.removeAll();
-        FlatLaf.revalidateAndRepaintAllFramesAndDialogs();
+        frame.contentPane.add(passwordsPanel, "grow");
 
-        // TODO: Change screen when Implemented
+        FlatLaf.revalidateAndRepaintAllFramesAndDialogs();
     }
 
     private void choosePathActionListener() {
