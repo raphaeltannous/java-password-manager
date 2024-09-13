@@ -139,7 +139,7 @@ public class PasswordManagerSQLite implements PasswordManagerInterface {
             // Checking if the tables `Passwords` and `backupCodes` are present.
             boolean isPasswordsTableAvailable = false;
             boolean isBackupCodesTableAvaible = false;
-            boolean isTablesAvailable = false;
+            boolean areTablesAvailable = false;
             while (rs.next()) {
                 if (rs.getString(4).equalsIgnoreCase("TABLE") && rs.getString(3).equals("passwords")) {
                     isPasswordsTableAvailable = true;
@@ -150,9 +150,9 @@ public class PasswordManagerSQLite implements PasswordManagerInterface {
                 }
             }
 
-            isTablesAvailable = isPasswordsTableAvailable && isBackupCodesTableAvaible;
+            areTablesAvailable = isPasswordsTableAvailable && isBackupCodesTableAvaible;
 
-            if (isPasswordsTableAvailable || isBackupCodesTableAvaible) {
+            if (isPasswordsTableAvailable != isBackupCodesTableAvaible) { // XOR
                 throw new SQLDataException("database's tables are messed up.");
             }
 
@@ -176,7 +176,7 @@ public class PasswordManagerSQLite implements PasswordManagerInterface {
             //   FOREIGN KEY (passwordId) REFERENCES passwords(id)
             // );
 
-            if (!isTablesAvailable) {
+            if (!areTablesAvailable) {
                 statement.executeUpdate(
                     "CREATE TABLE passwords ("
                     + "id INTEGER NOT NULL PRIMARY KEY, "
@@ -295,7 +295,7 @@ public class PasswordManagerSQLite implements PasswordManagerInterface {
         }
 
         if (!isPasswordInDB(passwordId)) {
-            throw new IllegalArgumentException("password is not in the databse.");
+            throw new IllegalArgumentException("password is not in the database.");
         }
 
         try (
@@ -319,7 +319,7 @@ public class PasswordManagerSQLite implements PasswordManagerInterface {
         }
 
         if (!isPasswordInDB(passwordId)) {
-            throw new IllegalArgumentException("password is not in the databse.");
+            throw new IllegalArgumentException("password is not in the database.");
         }
 
         try (
@@ -343,7 +343,7 @@ public class PasswordManagerSQLite implements PasswordManagerInterface {
         }
 
         if (!isPasswordInDB(passwordId)) {
-            throw new IllegalArgumentException("password is not in the databse.");
+            throw new IllegalArgumentException("password is not in the database.");
         }
 
         try (
@@ -363,7 +363,7 @@ public class PasswordManagerSQLite implements PasswordManagerInterface {
 
     public void deletePassword(int passwordId) {
         if (!isPasswordInDB(passwordId)) {
-            throw new IllegalArgumentException("password is not in the databse.");
+            throw new IllegalArgumentException("password is not in the database.");
         }
 
         try (
@@ -382,7 +382,7 @@ public class PasswordManagerSQLite implements PasswordManagerInterface {
 
     public String fetchOTP(int passwordId) {
         if (!isPasswordInDB(passwordId)) {
-            throw new IllegalArgumentException("password is not in the databse.");
+            throw new IllegalArgumentException("password is not in the database.");
         }
 
         String otp = "";
@@ -407,7 +407,7 @@ public class PasswordManagerSQLite implements PasswordManagerInterface {
 
     public void modifyOTP(int passwordId, String newOTP) {
         if (!isPasswordInDB(passwordId)) {
-            throw new IllegalArgumentException("password is not in the databse.");
+            throw new IllegalArgumentException("password is not in the database.");
         }
 
         try (
@@ -427,7 +427,7 @@ public class PasswordManagerSQLite implements PasswordManagerInterface {
 
     public String fetchNote(int passwordId) {
         if (!isPasswordInDB(passwordId)) {
-            throw new IllegalArgumentException("password is not in the databse.");
+            throw new IllegalArgumentException("password is not in the database.");
         }
 
         String note = "";
@@ -453,7 +453,7 @@ public class PasswordManagerSQLite implements PasswordManagerInterface {
 
     public void modifyNote(int passwordId, String newNote) {
         if (!isPasswordInDB(passwordId)) {
-            throw new IllegalArgumentException("password is not in the databse.");
+            throw new IllegalArgumentException("password is not in the database.");
         }
 
         try (
@@ -473,7 +473,7 @@ public class PasswordManagerSQLite implements PasswordManagerInterface {
 
     public List<String[]> fetchBackupCodes(int passwordId) {
         if (!isPasswordInDB(passwordId)) {
-            throw new IllegalArgumentException("password is not in the databse.");
+            throw new IllegalArgumentException("password is not in the database.");
         }
 
         List<String[]> backupCodes = new ArrayList<>();
@@ -507,7 +507,7 @@ public class PasswordManagerSQLite implements PasswordManagerInterface {
 
     public void addBackupCode(int passwordId, String backupCode) {
         if (!isPasswordInDB(passwordId)) {
-            throw new IllegalArgumentException("password is not in the databse.");
+            throw new IllegalArgumentException("password is not in the database.");
         }
 
         try (
@@ -589,7 +589,7 @@ public class PasswordManagerSQLite implements PasswordManagerInterface {
 
     public void updateHasBackupCodeStatus(int passwordId, int status) {
         if (!isPasswordInDB(passwordId)) {
-            throw new IllegalArgumentException("password is not in the databse.");
+            throw new IllegalArgumentException("password is not in the database.");
         }
 
         try (
