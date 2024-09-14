@@ -28,7 +28,7 @@ public class SecurePasswordGenerator {
         boolean usePunctuation
     ) {
         if (length < 16) {
-            throw new IllegalArgumentException("length should be greater or equal 16.");
+            numberOfWhiteSpaces = 0;
         }
 
         // 15% of the code can be spaces
