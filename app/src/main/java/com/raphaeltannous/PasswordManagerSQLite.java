@@ -32,6 +32,21 @@ public class PasswordManagerSQLite implements PasswordManagerInterface {
         + " VALUES (?, ?, ?);"
     );
 
+    private final String fetchWebsiteStatement = (
+        "SELECT website FROM passwords "
+        + "WHERE id = ?;"
+    );
+
+    private final String fetchUsernameStatement = (
+        "SELECT username FROM passwords "
+        + "WHERE id = ?;"
+    );
+
+    private final String fetchPasswordStatement = (
+        "SELECT password FROM passwords "
+        + "WHERE id = ?;"
+    );
+
     private final String updateWebsiteStatement = (
         "UPDATE passwords SET website = ? "
         + "WHERE id = ?;"
@@ -258,6 +273,81 @@ public class PasswordManagerSQLite implements PasswordManagerInterface {
         }
 
         return count;
+    }
+
+    public String fetchWebsite(int passwordId) {
+        if (!isPasswordInDB(passwordId)) {
+            throw new IllegalArgumentException("password is not in the database.");
+        }
+
+        String website = "";
+
+        try (
+            Connection connection = databaseConfig.withKey(this.databasePassword).build().createConnection(this.databaseURL);
+            PreparedStatement statement = connection.prepareStatement(fetchWebsiteStatement);
+        ) {
+            statement.setQueryTimeout(30);
+
+            statement.setInt(1, passwordId);
+
+            ResultSet rs = statement.executeQuery();
+
+            website = rs.getString("website");
+        } catch (SQLException e) {
+            e.printStackTrace(System.err);
+        }
+
+        return website;
+    }
+
+    public String fetchUsername(int passwordId) {
+        if (!isPasswordInDB(passwordId)) {
+            throw new IllegalArgumentException("password is not in the database.");
+        }
+
+        String username = "";
+
+        try (
+            Connection connection = databaseConfig.withKey(this.databasePassword).build().createConnection(this.databaseURL);
+            PreparedStatement statement = connection.prepareStatement(fetchUsernameStatement);
+        ) {
+            statement.setQueryTimeout(30);
+
+            statement.setInt(1, passwordId);
+
+            ResultSet rs = statement.executeQuery();
+
+            username = rs.getString("username");
+        } catch (SQLException e) {
+            e.printStackTrace(System.err);
+        }
+
+        return username;
+    }
+
+    public String fetchPassword(int passwordId) {
+        if (!isPasswordInDB(passwordId)) {
+            throw new IllegalArgumentException("password is not in the database.");
+        }
+
+        String password = "";
+
+        try (
+            Connection connection = databaseConfig.withKey(this.databasePassword).build().createConnection(this.databaseURL);
+            PreparedStatement statement = connection.prepareStatement(fetchPasswordStatement);
+        ) {
+            statement.setQueryTimeout(30);
+
+            statement.setInt(1, passwordId);
+
+            ResultSet rs = statement.executeQuery();
+
+            password = rs.getString("password");
+        } catch (SQLException e) {
+            e.printStackTrace(System.err);
+        }
+
+        return password;
     }
 
     public void addPassword(String website, String username, String password) {
