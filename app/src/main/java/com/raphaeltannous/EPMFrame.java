@@ -30,6 +30,9 @@ public class EPMFrame extends JFrame {
     protected JMenuItem newPasswordMenuItem;
     protected JMenuItem editPasswordMenuItem;
     protected JMenuItem deletePasswordMenuItem;
+    protected JMenuItem copyWebsiteMenuItem;
+    protected JMenuItem copyUsernameMenuItem;
+    protected JMenuItem copyPasswordMenuItem;
 
     protected Container contentPane;
 
@@ -47,10 +50,16 @@ public class EPMFrame extends JFrame {
         JMenuItem openMenuItem = new JMenuItem();
         closeMenuItem = new JMenuItem();
 
-        JMenu toolsMenu = new JMenu();
+        JMenu passwordsMenu = new JMenu();
         newPasswordMenuItem = new JMenuItem();
         editPasswordMenuItem = new JMenuItem();
         deletePasswordMenuItem = new JMenuItem();
+        copyWebsiteMenuItem = new JMenuItem();
+        copyUsernameMenuItem = new JMenuItem();
+        copyPasswordMenuItem = new JMenuItem();
+
+        JMenu toolsMenu = new JMenu();
+        JMenuItem generatePasswordMenuItem = new JMenuItem();
 
         JMenu helpMenu = new JMenu();
         JMenuItem documentationMenuItem = new JMenuItem();
@@ -75,7 +84,7 @@ public class EPMFrame extends JFrame {
 
                 // createMenuItem
                 createMenuItem.setText("Create");
-                createMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, InputEvent.CTRL_DOWN_MASK));
+                createMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, InputEvent.CTRL_DOWN_MASK | InputEvent.SHIFT_DOWN_MASK));
                 createMenuItem.setMnemonic('N');
                 createMenuItem.setIcon(new FlatSVGIcon("com/raphaeltannous/icons/plus.svg"));
                 createMenuItem.addActionListener(e -> createActionListener());
@@ -110,35 +119,78 @@ public class EPMFrame extends JFrame {
             }
             menuBar.add(databaseMenu);
 
-            // toolsMenu
+            // passwordsMenu
             {
-                toolsMenu.setText("Tools");
-                toolsMenu.setMnemonic('T');
+                passwordsMenu.setText("Passwords");
+                // passwordsMenu.setMnemonic('P');
 
                 // addPasswordMenuItem
                 newPasswordMenuItem.setText("New Password");
+                newPasswordMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, InputEvent.CTRL_DOWN_MASK));
                 // newPasswordMenuItem.setMnemonic('A');
                 // BUG: For some reasons when the letter a is written in the dialog,
                 // it will also be taken as a keyboard shortcut and call the dialog
                 // once again.
                 newPasswordMenuItem.setIcon(new FlatSVGIcon("com/raphaeltannous/icons/plus-square.svg"));
                 newPasswordMenuItem.setEnabled(false);
-                toolsMenu.add(newPasswordMenuItem);
+                passwordsMenu.add(newPasswordMenuItem);
 
                 // editPasswordMenuItem
                 editPasswordMenuItem.setText("Edit Password");
-                editPasswordMenuItem.setMnemonic('E');
+                editPasswordMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_E, InputEvent.CTRL_DOWN_MASK));
+                // editPasswordMenuItem.setMnemonic('E');
                 editPasswordMenuItem.setIcon(new FlatSVGIcon("com/raphaeltannous/icons/pencil-square.svg"));
                 editPasswordMenuItem.setEnabled(false);
-                toolsMenu.add(editPasswordMenuItem);
-                toolsMenu.addSeparator();
+                passwordsMenu.add(editPasswordMenuItem);
+                passwordsMenu.addSeparator();
 
                 // deletePasswordMenuItem
                 deletePasswordMenuItem.setText("Delete Password");
-                deletePasswordMenuItem.setMnemonic('D');
+                deletePasswordMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_D, InputEvent.CTRL_DOWN_MASK));
+                // deletePasswordMenuItem.setMnemonic('D');
                 deletePasswordMenuItem.setIcon(new FlatSVGIcon("com/raphaeltannous/icons/x-square.svg"));
                 deletePasswordMenuItem.setEnabled(false);
-                toolsMenu.add(deletePasswordMenuItem);
+                passwordsMenu.add(deletePasswordMenuItem);
+                passwordsMenu.addSeparator();
+
+                // copyWebsiteMenuItem
+                copyWebsiteMenuItem.setText("Copy Website");
+                copyWebsiteMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_U, InputEvent.CTRL_DOWN_MASK));
+                // copyWebsiteMenuItem.setMnemonic('W');
+                copyWebsiteMenuItem.setIcon(new FlatSVGIcon("com/raphaeltannous/icons/website-copy.svg"));
+                copyWebsiteMenuItem.setEnabled(false);
+                passwordsMenu.add(copyWebsiteMenuItem);
+
+                // copyUsernameMenuItem
+                copyUsernameMenuItem.setText("Copy Username");
+                copyUsernameMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_B, InputEvent.CTRL_DOWN_MASK));
+                // copyUsernameMenuItem.setMnemonic('U');
+                copyUsernameMenuItem.setIcon(new FlatSVGIcon("com/raphaeltannous/icons/user-copy.svg"));
+                copyUsernameMenuItem.setEnabled(false);
+                passwordsMenu.add(copyUsernameMenuItem);
+
+                // copyPasswordMenuItem
+                copyPasswordMenuItem.setText("Copy Password");
+                copyPasswordMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C, InputEvent.CTRL_DOWN_MASK));
+                // copyPasswordMenuItem.setMnemonic('P');
+                copyPasswordMenuItem.setIcon(new FlatSVGIcon("com/raphaeltannous/icons/key-copy.svg"));
+                copyPasswordMenuItem.setEnabled(false);
+                passwordsMenu.add(copyPasswordMenuItem);
+            }
+            menuBar.add(passwordsMenu);
+
+            // toolsMenu
+            {
+                toolsMenu.setText("Tools");
+                toolsMenu.setMnemonic('T');
+
+                // generatePasswordMenuItem
+                generatePasswordMenuItem.setText("Password Generator");
+                generatePasswordMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_G, InputEvent.CTRL_DOWN_MASK));
+                generatePasswordMenuItem.setMnemonic('G');
+                generatePasswordMenuItem.setIcon(new FlatSVGIcon("com/raphaeltannous/icons/dice-5.svg"));
+                generatePasswordMenuItem.addActionListener(e -> generatePasswordMenuItemActionListener());
+                toolsMenu.add(generatePasswordMenuItem);
             }
             menuBar.add(toolsMenu);
 
@@ -167,6 +219,11 @@ public class EPMFrame extends JFrame {
         setJMenuBar(menuBar);
 
         contentPane.add(openAndCreatePanel, "align center");
+    }
+
+    private Object generatePasswordMenuItemActionListener() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'generatePasswordMenuItemActionListener'");
     }
 
     private Object aboutActionListener() {

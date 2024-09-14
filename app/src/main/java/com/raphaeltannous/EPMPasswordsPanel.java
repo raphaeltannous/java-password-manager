@@ -1,6 +1,9 @@
 package com.raphaeltannous;
 
 import java.awt.Point;
+import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.nio.file.Path;
@@ -56,6 +59,9 @@ public class EPMPasswordsPanel extends JPanel {
         frame.newPasswordMenuItem.addActionListener(e -> newPasswordMenuItemActionListener());
         frame.deletePasswordMenuItem.addActionListener(e -> deletePasswordMenuItemActionListener());
         frame.editPasswordMenuItem.addActionListener(e -> editPasswordMenuItemActionListener());
+        frame.copyWebsiteMenuItem.addActionListener(e -> copyWebsiteMenuItemActionListener());
+        frame.copyUsernameMenuItem.addActionListener(e -> copyUsernameMenuItemActionListener());
+        frame.copyPasswordMenuItem.addActionListener(e -> copyPasswordMenuItemActionListener());
     }
 
     private void enableToolsOnSelection() {
@@ -67,6 +73,9 @@ public class EPMPasswordsPanel extends JPanel {
 
         frame.editPasswordMenuItem.setEnabled(status);
         frame.deletePasswordMenuItem.setEnabled(status);
+        frame.copyWebsiteMenuItem.setEnabled(status);
+        frame.copyUsernameMenuItem.setEnabled(status);
+        frame.copyPasswordMenuItem.setEnabled(status);
     }
 
     private Object[][] databaseDataToTableData() {
@@ -95,6 +104,9 @@ public class EPMPasswordsPanel extends JPanel {
         JMenuItem newPasswordMenuItem = new JMenuItem();
         JMenuItem editPasswordMenuItem = new JMenuItem();
         JMenuItem deletePasswordMenuItem = new JMenuItem();
+        JMenuItem copyWebsiteMenuItem = new JMenuItem();
+        JMenuItem copyUsernameMenuItem = new JMenuItem();
+        JMenuItem copyPasswordMenuItem = new JMenuItem();
 
         setLayout(new MigLayout("insets 0, fill"));
 
@@ -136,6 +148,25 @@ public class EPMPasswordsPanel extends JPanel {
             deletePasswordMenuItem.setIcon(new FlatSVGIcon("com/raphaeltannous/icons/x-square.svg"));
             deletePasswordMenuItem.addActionListener(e -> deletePasswordMenuItemActionListener());
             passwordPopupMenu.add(deletePasswordMenuItem);
+            passwordPopupMenu.addSeparator();
+
+            // copyWebsiteMenuItem
+            copyWebsiteMenuItem.setText("Copy Website");
+            copyWebsiteMenuItem.setIcon(new FlatSVGIcon("com/raphaeltannous/icons/website-copy.svg"));
+            copyWebsiteMenuItem.addActionListener(e -> copyWebsiteMenuItemActionListener());
+            passwordPopupMenu.add(copyWebsiteMenuItem);
+
+            // copyUsernameMenuItem
+            copyUsernameMenuItem.setText("Copy Username");
+            copyUsernameMenuItem.setIcon(new FlatSVGIcon("com/raphaeltannous/icons/user-copy.svg"));
+            copyUsernameMenuItem.addActionListener(e -> copyUsernameMenuItemActionListener());
+            passwordPopupMenu.add(copyUsernameMenuItem);
+
+            // copyPasswordMenuItem
+            copyPasswordMenuItem.setText("Copy Password");
+            copyPasswordMenuItem.setIcon(new FlatSVGIcon("com/raphaeltannous/icons/key-copy.svg"));
+            copyPasswordMenuItem.addActionListener(e -> copyPasswordMenuItemActionListener());
+            passwordPopupMenu.add(copyPasswordMenuItem);
         }
 
         passwordsTable.setComponentPopupMenu(passwordPopupMenu);
@@ -189,6 +220,34 @@ public class EPMPasswordsPanel extends JPanel {
     private int getSelectedPasswordId() {
         int selectedRow = passwordsTable.getSelectedRow();
         return Integer.parseInt((String) passwordsTable.getValueAt(selectedRow, 0));
+    }
+
+    private void copyToClipboard(String text) {
+        StringSelection selection = new StringSelection(text);
+
+        Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+        clipboard.setContents(selection, null);
+    }
+
+    private void copyPasswordMenuItemActionListener() {
+        int passwordId = getSelectedPasswordId();
+
+        String password = db.fetchPassword(passwordId);
+        copyToClipboard(password);
+    }
+
+    private void copyUsernameMenuItemActionListener() {
+        int passwordId = getSelectedPasswordId();
+
+        String username = db.fetchUsername(passwordId);
+        copyToClipboard(username);
+    }
+
+    private void copyWebsiteMenuItemActionListener() {
+        int passwordId = getSelectedPasswordId();
+
+        String website = db.fetchWebsite(passwordId);
+        copyToClipboard(website);
     }
 
     private void deletePasswordMenuItemActionListener() {
