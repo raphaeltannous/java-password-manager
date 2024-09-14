@@ -15,6 +15,7 @@ import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 
 import com.formdev.flatlaf.extras.FlatSVGIcon;
@@ -30,6 +31,13 @@ public class EPMPasswordsPanel extends JPanel {
 
     private JTable passwordsTable;
     private DefaultTableModel passwordsTableModel;
+
+    private boolean newActionListenerInProgress = false;
+    private boolean editActionListenerInProgress = false;
+    private boolean deleteActionListenerInProgress = false;
+    private boolean copyWebsiteActionListenerInProgress = false;
+    private boolean copyUsernameActionListenerInProgress = false;
+    private boolean copyPasswordActionListenerInProgress = false;
 
     EPMPasswordsPanel(
         EPMFrame frame,
@@ -122,9 +130,9 @@ public class EPMPasswordsPanel extends JPanel {
         }
 
         // Hiding the Id Column, but it will be still accessible by the code.
-        //passwordsTable.removeColumn(
-        //    passwordsTable.getColumnModel().getColumn(0)
-        //);
+        passwordsTable.removeColumn(
+            passwordsTable.getColumnModel().getColumn(0)
+        );
 
         add(scrollPane, "grow");
 
@@ -230,48 +238,97 @@ public class EPMPasswordsPanel extends JPanel {
     }
 
     private void copyPasswordMenuItemActionListener() {
+        if (copyPasswordActionListenerInProgress) {
+            return;
+        }
+
+        copyPasswordActionListenerInProgress = true;
+
         int passwordId = getSelectedPasswordId();
 
         String password = db.fetchPassword(passwordId);
         copyToClipboard(password);
+
+        SwingUtilities.invokeLater(() -> copyPasswordActionListenerInProgress = false);
     }
 
     private void copyUsernameMenuItemActionListener() {
+        if (copyUsernameActionListenerInProgress) {
+            return;
+        }
+
+        copyUsernameActionListenerInProgress = true;
+
         int passwordId = getSelectedPasswordId();
 
         String username = db.fetchUsername(passwordId);
         copyToClipboard(username);
+
+        SwingUtilities.invokeLater(() -> copyUsernameActionListenerInProgress = false);
     }
 
     private void copyWebsiteMenuItemActionListener() {
+        if (copyWebsiteActionListenerInProgress) {
+            return;
+        }
+
+        copyWebsiteActionListenerInProgress = true;
+
         int passwordId = getSelectedPasswordId();
 
         String website = db.fetchWebsite(passwordId);
         copyToClipboard(website);
+
+        SwingUtilities.invokeLater(() -> copyWebsiteActionListenerInProgress = false);
     }
 
     private void deletePasswordMenuItemActionListener() {
+        if (deleteActionListenerInProgress) {
+            return;
+        }
+
+        deleteActionListenerInProgress = true;
+
         int passwordId = getSelectedPasswordId();
 
         db.deletePassword(passwordId);
 
         updateTableModel();
         enableTools();
+
+        SwingUtilities.invokeLater(() -> deleteActionListenerInProgress = false);
     }
 
     private void editPasswordMenuItemActionListener() {
+        if (editActionListenerInProgress) {
+            return;
+        }
+
+        editActionListenerInProgress = true;
+
         System.out.println(getSelectedPasswordId());
 
         enableTools();
+
+        SwingUtilities.invokeLater(() -> editActionListenerInProgress = false);
     }
 
     private void newPasswordMenuItemActionListener() {
+        if (newActionListenerInProgress) {
+            return;
+        }
+
+        newActionListenerInProgress = true;
+
         EPMNewPasswordDialog addPasswordDialog = new EPMNewPasswordDialog(
             this.frame,
-            this
+            this,
+            this.frame
         );
 
         addPasswordDialog.setVisible(true);
         enableTools();
+
+        SwingUtilities.invokeLater(() -> newActionListenerInProgress = false);
     }
 }
