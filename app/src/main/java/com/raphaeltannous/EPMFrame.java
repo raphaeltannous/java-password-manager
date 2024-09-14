@@ -8,7 +8,9 @@ import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JPasswordField;
 import javax.swing.KeyStroke;
+import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
 
 import com.formdev.flatlaf.FlatLaf;
@@ -35,6 +37,13 @@ public class EPMFrame extends JFrame {
     protected JMenuItem copyPasswordMenuItem;
 
     protected Container contentPane;
+
+    private boolean createActionListenerInProgress = false;
+    private boolean openActionListenerInProgress = false;
+    private boolean closeActionListenerInProgress = false;
+    private boolean aboutActionListenerInProgress = false;
+    private boolean generatePasswordActionListenerInProgress = false;
+    private boolean documentationActionListenerInProrgress = false;
 
     EPMFrame() {
         setIconImages(FlatSVGUtils.createWindowIconImages("/com/raphaeltannous/epm.svg"));
@@ -122,15 +131,15 @@ public class EPMFrame extends JFrame {
             // passwordsMenu
             {
                 passwordsMenu.setText("Passwords");
-                // passwordsMenu.setMnemonic('P');
+                passwordsMenu.setMnemonic('P');
 
                 // addPasswordMenuItem
                 newPasswordMenuItem.setText("New Password");
                 newPasswordMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, InputEvent.CTRL_DOWN_MASK));
-                // newPasswordMenuItem.setMnemonic('A');
+                newPasswordMenuItem.setMnemonic('A');
                 // BUG: For some reasons when the letter a is written in the dialog,
                 // it will also be taken as a keyboard shortcut and call the dialog
-                // once again.
+                // once again. (Should be fixed) ?!
                 newPasswordMenuItem.setIcon(new FlatSVGIcon("com/raphaeltannous/icons/plus-square.svg"));
                 newPasswordMenuItem.setEnabled(false);
                 passwordsMenu.add(newPasswordMenuItem);
@@ -138,7 +147,7 @@ public class EPMFrame extends JFrame {
                 // editPasswordMenuItem
                 editPasswordMenuItem.setText("Edit Password");
                 editPasswordMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_E, InputEvent.CTRL_DOWN_MASK));
-                // editPasswordMenuItem.setMnemonic('E');
+                editPasswordMenuItem.setMnemonic('E');
                 editPasswordMenuItem.setIcon(new FlatSVGIcon("com/raphaeltannous/icons/pencil-square.svg"));
                 editPasswordMenuItem.setEnabled(false);
                 passwordsMenu.add(editPasswordMenuItem);
@@ -147,7 +156,7 @@ public class EPMFrame extends JFrame {
                 // deletePasswordMenuItem
                 deletePasswordMenuItem.setText("Delete Password");
                 deletePasswordMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_D, InputEvent.CTRL_DOWN_MASK));
-                // deletePasswordMenuItem.setMnemonic('D');
+                deletePasswordMenuItem.setMnemonic('D');
                 deletePasswordMenuItem.setIcon(new FlatSVGIcon("com/raphaeltannous/icons/x-square.svg"));
                 deletePasswordMenuItem.setEnabled(false);
                 passwordsMenu.add(deletePasswordMenuItem);
@@ -156,7 +165,7 @@ public class EPMFrame extends JFrame {
                 // copyWebsiteMenuItem
                 copyWebsiteMenuItem.setText("Copy Website");
                 copyWebsiteMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_U, InputEvent.CTRL_DOWN_MASK));
-                // copyWebsiteMenuItem.setMnemonic('W');
+                copyWebsiteMenuItem.setMnemonic('W');
                 copyWebsiteMenuItem.setIcon(new FlatSVGIcon("com/raphaeltannous/icons/website-copy.svg"));
                 copyWebsiteMenuItem.setEnabled(false);
                 passwordsMenu.add(copyWebsiteMenuItem);
@@ -164,7 +173,7 @@ public class EPMFrame extends JFrame {
                 // copyUsernameMenuItem
                 copyUsernameMenuItem.setText("Copy Username");
                 copyUsernameMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_B, InputEvent.CTRL_DOWN_MASK));
-                // copyUsernameMenuItem.setMnemonic('U');
+                copyUsernameMenuItem.setMnemonic('U');
                 copyUsernameMenuItem.setIcon(new FlatSVGIcon("com/raphaeltannous/icons/user-copy.svg"));
                 copyUsernameMenuItem.setEnabled(false);
                 passwordsMenu.add(copyUsernameMenuItem);
@@ -172,7 +181,7 @@ public class EPMFrame extends JFrame {
                 // copyPasswordMenuItem
                 copyPasswordMenuItem.setText("Copy Password");
                 copyPasswordMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C, InputEvent.CTRL_DOWN_MASK));
-                // copyPasswordMenuItem.setMnemonic('P');
+                copyPasswordMenuItem.setMnemonic('P');
                 copyPasswordMenuItem.setIcon(new FlatSVGIcon("com/raphaeltannous/icons/key-copy.svg"));
                 copyPasswordMenuItem.setEnabled(false);
                 passwordsMenu.add(copyPasswordMenuItem);
@@ -189,7 +198,7 @@ public class EPMFrame extends JFrame {
                 generatePasswordMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_G, InputEvent.CTRL_DOWN_MASK));
                 generatePasswordMenuItem.setMnemonic('G');
                 generatePasswordMenuItem.setIcon(new FlatSVGIcon("com/raphaeltannous/icons/dice-5.svg"));
-                generatePasswordMenuItem.addActionListener(e -> generatePasswordMenuItemActionListener());
+                generatePasswordMenuItem.addActionListener(e -> generatePasswordMenuItemActionListener(null));
                 toolsMenu.add(generatePasswordMenuItem);
             }
             menuBar.add(toolsMenu);
@@ -201,7 +210,6 @@ public class EPMFrame extends JFrame {
 
                 // documentationMenuItem
                 documentationMenuItem.setText("Documentation");
-                documentationMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_D, InputEvent.CTRL_DOWN_MASK));
                 documentationMenuItem.setMnemonic('D');
                 documentationMenuItem.setIcon(new FlatSVGIcon("com/raphaeltannous/icons/question.svg"));
                 documentationMenuItem.addActionListener(e -> documentationActionListener());
@@ -221,19 +229,38 @@ public class EPMFrame extends JFrame {
         contentPane.add(openAndCreatePanel, "align center");
     }
 
-    private Object generatePasswordMenuItemActionListener() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'generatePasswordMenuItemActionListener'");
-    }
-
-    private Object aboutActionListener() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'aboutActionListener'");
-    }
-
     private Object documentationActionListener() {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'documentationActionListener'");
+    }
+
+    protected void generatePasswordMenuItemActionListener(JPasswordField passwordField) {
+        if (generatePasswordActionListenerInProgress) {
+            return;
+        }
+
+        generatePasswordActionListenerInProgress = true;
+
+        EPMPasswordGeneratorDialog passwordGeneratorDialog = new EPMPasswordGeneratorDialog(
+            this,
+            null
+        );
+
+        passwordGeneratorDialog.setVisible(true);
+
+        SwingUtilities.invokeLater(() -> generatePasswordActionListenerInProgress = false);
+    }
+
+    private void aboutActionListener() {
+        if (aboutActionListenerInProgress) {
+            return;
+        }
+
+        aboutActionListenerInProgress = true;
+
+        // CODE HERE
+
+        SwingUtilities.invokeLater(() -> aboutActionListenerInProgress = false);
     }
 
     private void exitActionListener() {
@@ -241,23 +268,47 @@ public class EPMFrame extends JFrame {
     }
 
     private void closeActionListener() {
+        if (closeActionListenerInProgress) {
+            return;
+        }
+
+        closeActionListenerInProgress = true;
+
         EPMOpenAndCreatePanel openAndCreatePanel = new EPMOpenAndCreatePanel(this);
         contentPane.removeAll();
         contentPane.add(openAndCreatePanel, "align center");
         FlatLaf.revalidateAndRepaintAllFramesAndDialogs();
+
+        SwingUtilities.invokeLater(() -> closeActionListenerInProgress = false);
     }
 
     protected void openActionListener() {
+        if (openActionListenerInProgress) {
+            return;
+        }
+
+        openActionListenerInProgress = true;
+
         EPMOpenPanel openPanel = new EPMOpenPanel(this);
         contentPane.removeAll();
         contentPane.add(openPanel, "align center");
         FlatLaf.revalidateAndRepaintAllFramesAndDialogs();
+
+        SwingUtilities.invokeLater(() -> openActionListenerInProgress = false);
     }
 
     protected void createActionListener() {
+        if (createActionListenerInProgress) {
+            return;
+        }
+
+        createActionListenerInProgress = true;
+
         EPMCreatePanel createPanel = new EPMCreatePanel(this);
         contentPane.removeAll();
         contentPane.add(createPanel, "align center");
         FlatLaf.revalidateAndRepaintAllFramesAndDialogs();
+
+        SwingUtilities.invokeLater(() -> createActionListenerInProgress = false);
     }
 }
