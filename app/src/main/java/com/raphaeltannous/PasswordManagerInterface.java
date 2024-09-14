@@ -60,6 +60,10 @@ public interface PasswordManagerInterface {
     public List<String[]> fetchPasswords();
     public int getPasswordsCount();
 
+    public String fetchWebsite(int passwordId);
+    public String fetchUsername(int passwordId);
+    public String fetchPassword(int passwordId);
+
     // Website/Username/Password are required to be in a password and they cannot be empty.
     public void addPassword(
         String website,
