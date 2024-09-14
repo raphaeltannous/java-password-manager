@@ -351,15 +351,15 @@ public class PasswordManagerSQLite implements PasswordManagerInterface {
     }
 
     public void addPassword(String website, String username, String password) {
-        if (website == "") {
+        if (website.isEmpty()) {
             throw new IllegalArgumentException("website cannot be empty.");
         }
 
-        if (username == "") {
+        if (username.isEmpty()) {
             throw new IllegalArgumentException("username cannot be empty.");
         }
 
-        if (password == "") {
+        if (password.isEmpty()) {
             throw new IllegalArgumentException("password cannot be empty.");
         }
 
@@ -403,7 +403,7 @@ public class PasswordManagerSQLite implements PasswordManagerInterface {
     }
 
     public void modifyWebsite(int passwordId, String newWebsite) {
-        if (newWebsite == "") {
+        if (newWebsite.isEmpty()) {
             throw new IllegalArgumentException("newWebsite cannot be empty.");
         }
 
@@ -427,7 +427,7 @@ public class PasswordManagerSQLite implements PasswordManagerInterface {
     }
 
     public void modifyUsername(int passwordId, String newUsername) {
-        if (newUsername ==  "") {
+        if (newUsername.isEmpty()) {
             throw new IllegalArgumentException("newUsername cannot be empty.");
         }
 
@@ -451,7 +451,7 @@ public class PasswordManagerSQLite implements PasswordManagerInterface {
     }
 
     public void modifyPassword(int passwordId, String newPassword) {
-        if (newPassword == "") {
+        if (newPassword.isEmpty()) {
             throw new IllegalArgumentException("newPassword cannot be empty.");
         }
 
@@ -519,6 +519,8 @@ public class PasswordManagerSQLite implements PasswordManagerInterface {
     }
 
     public void modifyOTP(int passwordId, String newOTP) {
+        // If newOTP is empty then there's no OTP.
+
         if (!isPasswordInDB(passwordId)) {
             throw new IllegalArgumentException("password is not in the database.");
         }
@@ -685,6 +687,10 @@ public class PasswordManagerSQLite implements PasswordManagerInterface {
             throw new IllegalArgumentException("backup code is not in the database.");
         }
 
+        if (!(status == 1 || status == 0)) {
+            throw new IllegalArgumentException("status must be either 0 or 1.");
+        }
+
         try (
             Connection connection = databaseConfig.withKey(this.databasePassword).build().createConnection(this.databaseURL);
             PreparedStatement statement = connection.prepareStatement(updateBackupCodeStatusStatement);
@@ -703,6 +709,10 @@ public class PasswordManagerSQLite implements PasswordManagerInterface {
     public void updateHasBackupCodeStatus(int passwordId, int status) {
         if (!isPasswordInDB(passwordId)) {
             throw new IllegalArgumentException("password is not in the database.");
+        }
+
+        if (!(status == 1 || status == 0)) {
+            throw new IllegalArgumentException("status must be either 0 or 1.");
         }
 
         try (
