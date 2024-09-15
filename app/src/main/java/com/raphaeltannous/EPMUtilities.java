@@ -1,5 +1,8 @@
 package com.raphaeltannous;
 
+import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
 import java.beans.PropertyChangeEvent;
 import java.util.Objects;
 
@@ -58,4 +61,12 @@ public class EPMUtilities {
 
         if (d != null) d.addDocumentListener(dl);
     }
+
+    public static void copyToClipboard(String text) {
+        StringSelection selection = new StringSelection(text);
+
+        Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+        clipboard.setContents(selection, null);
+    }
+
 }
