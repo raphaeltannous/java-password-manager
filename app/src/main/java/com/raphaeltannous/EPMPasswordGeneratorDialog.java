@@ -146,6 +146,7 @@ public class EPMPasswordGeneratorDialog extends JDialog {
                 useLowerCheckBox.setDisplayedMnemonicIndex(0);
                 useLowerCheckBox.setMnemonic('L');
                 useLowerCheckBox.setSelected(true);
+                useLowerCheckBox.addActionListener(e -> checkCheckBoxesStatus());
                 contentPanel.add(useLowerCheckBox, "cell 0 2, align left");
 
                 // useUpperCheckBox
@@ -154,6 +155,7 @@ public class EPMPasswordGeneratorDialog extends JDialog {
                 useUpperCheckBox.setDisplayedMnemonicIndex(0);
                 useUpperCheckBox.setMnemonic('U');
                 useUpperCheckBox.setSelected(true);
+                useUpperCheckBox.addActionListener(e -> checkCheckBoxesStatus());
                 contentPanel.add(useUpperCheckBox, "cell 1 2, align right");
 
                 // useDigitsCheckBox
@@ -161,6 +163,7 @@ public class EPMPasswordGeneratorDialog extends JDialog {
                 useDigitsCheckBox.setDisplayedMnemonicIndex(0);
                 useDigitsCheckBox.setMnemonic('D');
                 useDigitsCheckBox.setSelected(true);
+                useDigitsCheckBox.addActionListener(e -> checkCheckBoxesStatus());
                 contentPanel.add(useDigitsCheckBox, "cell 0 3, align left");
 
                 // usePunctuationCheckBox
@@ -169,6 +172,7 @@ public class EPMPasswordGeneratorDialog extends JDialog {
                 usePunctuationCheckBox.setDisplayedMnemonicIndex(0);
                 usePunctuationCheckBox.setMnemonic('P');
                 usePunctuationCheckBox.setSelected(true);
+                usePunctuationCheckBox.addActionListener(e -> checkCheckBoxesStatus());
                 contentPanel.add(usePunctuationCheckBox, "cell 1 3, align right");
 
                 // passwordLengthSpinnerLabel
@@ -203,6 +207,53 @@ public class EPMPasswordGeneratorDialog extends JDialog {
 
         contentPane.add(dialogPane, "align center");
         setLocationRelativeTo(getOwner());
+    }
+
+    private void checkCheckBoxesStatus() {
+        JCheckBox[] checkBoxes = new JCheckBox[] {
+            useLowerCheckBox,
+            useUpperCheckBox,
+            useDigitsCheckBox,
+            usePunctuationCheckBox
+        };
+
+        int checkBoxesLength = checkBoxes.length;
+
+        boolean[] checkBoxesStatus = new boolean[checkBoxesLength];
+
+        for (int i = 0; i < checkBoxesLength; i++) {
+            checkBoxesStatus[i] = checkBoxes[i].isSelected();
+        }
+
+        int count = countTrueCheckBoxes(checkBoxesStatus);
+
+        if (count == 1) {
+            for (int i = 0; i < checkBoxesLength; i++) {
+                if (checkBoxesStatus[i]) {
+                    checkBoxes[i].setEnabled(false);
+                }
+            }
+        } else {
+            for (JCheckBox checkBox: checkBoxes) {
+                if (!checkBox.isEnabled()) {
+                    checkBox.setEnabled(true);
+                }
+            }
+        }
+
+        generateButtonActionListener();
+    }
+
+    private int countTrueCheckBoxes(boolean[] checkBoxesStatus) {
+        int count = 0;
+
+        for (boolean status: checkBoxesStatus) {
+            if (status) {
+                count++;
+            }
+        }
+
+        return count;
     }
 
     private void numberOfWhiteSpacesSpinnerChangeListener() {
