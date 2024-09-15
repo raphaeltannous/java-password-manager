@@ -3,6 +3,7 @@ package com.raphaeltannous;
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.Window;
+import java.util.Objects;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -12,6 +13,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JSpinner;
+import javax.swing.JToolBar;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
@@ -19,6 +21,7 @@ import javax.swing.WindowConstants;
 import javax.swing.text.NumberFormatter;
 
 import com.formdev.flatlaf.FlatClientProperties;
+import com.formdev.flatlaf.extras.FlatSVGIcon;
 
 import net.miginfocom.swing.MigLayout;
 
@@ -45,6 +48,7 @@ public class EPMPasswordGeneratorDialog extends JDialog {
     private JSpinner numberOfWhiteSpacesSpinner;
 
     private boolean generateButtonActionListenerInProgress = false;
+    private boolean copyLocalPasswordButtonActionListenerInProgress = false;
 
     private Color[] success = new Color[]{new Color(0, 255, 0), new Color(200, 255, 200)};
 
@@ -63,13 +67,37 @@ public class EPMPasswordGeneratorDialog extends JDialog {
         // By default show the password
         localPasswordField.setEchoChar((char)0);
 
-        // TODO: Add a button to copy the password in the passwordField
+        // Copy button
+        JButton copyLocalPasswordButton = new JButton();
+        copyLocalPasswordButton.setIcon(new FlatSVGIcon("com/raphaeltannous/icons/key-copy-gray.svg"));
+        copyLocalPasswordButton.addActionListener(e -> copyLocalPasswordButtonActionListener());
+        copyLocalPasswordButton.setToolTipText("Copy Password");
 
         // Show reveal password button
         localPasswordField.putClientProperty(FlatClientProperties.STYLE, "showRevealButton: true");
 
+        // localPasswordToolBar
+        JToolBar localPasswordToolBar = new JToolBar();
+        localPasswordToolBar.addSeparator();
+        localPasswordToolBar.add(copyLocalPasswordButton);
+        localPasswordField.putClientProperty(FlatClientProperties.TEXT_FIELD_TRAILING_COMPONENT, localPasswordToolBar);
+
         // Generate a password by default
         generateButtonActionListener();
+    }
+
+    private void copyLocalPasswordButtonActionListener() {
+        if (copyLocalPasswordButtonActionListenerInProgress) {
+            return;
+        }
+
+        copyLocalPasswordButtonActionListenerInProgress = false;
+
+        EPMUtilities.copyToClipboard(
+            String.valueOf(localPasswordField.getPassword())
+        );
+
+        SwingUtilities.invokeLater(() -> copyLocalPasswordButtonActionListenerInProgress = false);
     }
 
     private void initDialogComponents() {
@@ -201,12 +229,41 @@ public class EPMPasswordGeneratorDialog extends JDialog {
                 generateButton.setDisplayedMnemonicIndex(0);
                 generateButton.addActionListener(e -> generateButtonActionListener());
                 contentPanel.add(generateButton, "cell 0 6 2 1, align center");
+
+                // okButton
+                okButton.setText("Ok");
+                okButton.setMnemonic('O');
+                okButton.setDisplayedMnemonicIndex(0);
+                okButton.addActionListener(e -> okButtonActionListener());
+                okButton.setEnabled(false);
+                contentPanel.add(okButton, "cell 0 7, align center");
+
+                // cancelButton
+                cancelButton.setText("Cancel");
+                cancelButton.setMnemonic('C');
+                cancelButton.setDisplayedMnemonicIndex(0);
+                cancelButton.addActionListener(e -> cancelButtonActionListener());
+                contentPanel.add(cancelButton, "cell 1 7, align center");
             }
         }
         dialogPane.add(contentPanel, "align center");
 
         contentPane.add(dialogPane, "align center");
         setLocationRelativeTo(getOwner());
+    }
+
+    private void cancelButtonActionListener() {
+        dispose();
+    }
+
+    private void okButtonActionListener() {
+        if (Objects.nonNull(remotePasswordField)) {
+            remotePasswordField.setText(
+                String.valueOf(localPasswordField.getPassword())
+            );
+        }
+
+        dispose();
     }
 
     private void checkCheckBoxesStatus() {
@@ -310,9 +367,9 @@ public class EPMPasswordGeneratorDialog extends JDialog {
     }
 
     private void checkOkButtonStatus() {
-        boolean  isLocalPasswordFieldEmpty = String.valueOf(localPasswordField.getPassword())   .isEmpty();
+        boolean  isLocalPasswordFieldEmpty = String.valueOf(localPasswordField.getPassword()).isEmpty();
 
-        if (isLocalPasswordFieldEmpty) {
+        if (!isLocalPasswordFieldEmpty) {
             okButton.setEnabled(true);
             return;
         }
