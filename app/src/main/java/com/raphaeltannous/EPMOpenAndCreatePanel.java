@@ -22,6 +22,7 @@ public class EPMOpenAndCreatePanel extends JPanel {
     private void initPanelComponents() {
         // Disabling closeMenuItem
         frame.closeMenuItem.setEnabled(false);
+        frame.newPasswordMenuItem.setEnabled(false);
 
         JButton createButton = new JButton("Create");
         JButton openButton = new JButton("Open");

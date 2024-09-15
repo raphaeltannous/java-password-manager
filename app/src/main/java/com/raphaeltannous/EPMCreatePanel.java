@@ -52,6 +52,7 @@ public class EPMCreatePanel extends JPanel {
     private void initPanelComponents() {
         // Enabling closeMenuItem
         frame.closeMenuItem.setEnabled(true);
+        frame.newPasswordMenuItem.setEnabled(false);
 
         JLabel databaseFilenameLabel = new JLabel();
         selectedPathLabel = new JLabel();
