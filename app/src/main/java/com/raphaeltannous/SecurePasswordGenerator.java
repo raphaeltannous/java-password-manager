@@ -15,8 +15,12 @@ public class SecurePasswordGenerator {
     public static final String DIGITS_CHARS = "0123456789";
     public static final String PUNCTUATION_CHARS = "!@#$%&*()_+-=[]|,./?><";
 
-    public static int maxNumberofWhitesSpaces(int length) {
-        return (int) Math.ceil(length * 0.15);
+    public static int maxNumberOfWhitesSpaces(int length) {
+        if (length < 8) {
+            return 0;
+        }
+
+        return (int) Math.floor(length * 0.15);
     }
 
     public static String generatePassword(
@@ -27,12 +31,8 @@ public class SecurePasswordGenerator {
         boolean useDigits,
         boolean usePunctuation
     ) {
-        if (length < 16) {
-            numberOfWhiteSpaces = 0;
-        }
-
         // 15% of the code can be spaces
-        if (numberOfWhiteSpaces > maxNumberofWhitesSpaces(length)) {
+        if (numberOfWhiteSpaces > maxNumberOfWhitesSpaces(length)) {
            throw new IllegalArgumentException("number of white spaces cannot exeed 15% of the length.");
         }
 
