@@ -243,7 +243,7 @@ public class EPMFrame extends JFrame {
 
         EPMPasswordGeneratorDialog passwordGeneratorDialog = new EPMPasswordGeneratorDialog(
             this,
-            null
+            passwordField
         );
 
         passwordGeneratorDialog.setVisible(true);
