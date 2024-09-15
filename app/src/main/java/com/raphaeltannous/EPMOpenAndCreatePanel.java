@@ -3,8 +3,6 @@ package com.raphaeltannous;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
-import com.formdev.flatlaf.FlatLaf;
-
 import net.miginfocom.swing.MigLayout;
 
 /**
