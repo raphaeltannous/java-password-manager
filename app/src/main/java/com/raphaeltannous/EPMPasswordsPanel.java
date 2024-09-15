@@ -1,9 +1,6 @@
 package com.raphaeltannous;
 
 import java.awt.Point;
-import java.awt.Toolkit;
-import java.awt.datatransfer.Clipboard;
-import java.awt.datatransfer.StringSelection;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.nio.file.Path;
@@ -230,13 +227,6 @@ public class EPMPasswordsPanel extends JPanel {
         return Integer.parseInt((String) passwordsTable.getValueAt(selectedRow, 0));
     }
 
-    private void copyToClipboard(String text) {
-        StringSelection selection = new StringSelection(text);
-
-        Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-        clipboard.setContents(selection, null);
-    }
-
     private void copyPasswordMenuItemActionListener() {
         if (copyPasswordActionListenerInProgress) {
             return;
@@ -247,7 +237,7 @@ public class EPMPasswordsPanel extends JPanel {
         int passwordId = getSelectedPasswordId();
 
         String password = db.fetchPassword(passwordId);
-        copyToClipboard(password);
+        EPMUtilities.copyToClipboard(password);
 
         SwingUtilities.invokeLater(() -> copyPasswordActionListenerInProgress = false);
     }
@@ -262,7 +252,7 @@ public class EPMPasswordsPanel extends JPanel {
         int passwordId = getSelectedPasswordId();
 
         String username = db.fetchUsername(passwordId);
-        copyToClipboard(username);
+        EPMUtilities.copyToClipboard(username);
 
         SwingUtilities.invokeLater(() -> copyUsernameActionListenerInProgress = false);
     }
@@ -277,7 +267,7 @@ public class EPMPasswordsPanel extends JPanel {
         int passwordId = getSelectedPasswordId();
 
         String website = db.fetchWebsite(passwordId);
-        copyToClipboard(website);
+        EPMUtilities.copyToClipboard(website);
 
         SwingUtilities.invokeLater(() -> copyWebsiteActionListenerInProgress = false);
     }
