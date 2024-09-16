@@ -337,4 +337,24 @@ public class EPMPasswordsPanel extends JPanel {
 
         SwingUtilities.invokeLater(() -> newActionListenerInProgress = false);
     }
+
+    private void showOrUpdateTOTPMenuItemActionListener() {
+        if (showOrUpdateTOTPMenuItemActionListenerInProgress) {
+            return;
+        }
+
+        showOrUpdateTOTPMenuItemActionListenerInProgress = true;
+
+        EPMTOTPDialog totpDialog = new EPMTOTPDialog(
+            this.frame,
+            this,
+            getSelectedPasswordId()
+        );
+
+        totpDialog.setVisible(true);
+        enableTools();
+        updateTableModel();
+
+        SwingUtilities.invokeLater(() -> showOrUpdateTOTPMenuItemActionListenerInProgress = false);
+    }
 }
