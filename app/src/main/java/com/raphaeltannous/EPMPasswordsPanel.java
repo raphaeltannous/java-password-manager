@@ -312,9 +312,16 @@ public class EPMPasswordsPanel extends JPanel {
 
         editActionListenerInProgress = true;
 
-        System.out.println(getSelectedPasswordId());
+        EPMEditPasswordDialog editPasswordDialog = new EPMEditPasswordDialog(
+            this.frame,
+            this,
+            this.frame,
+            getSelectedPasswordId()
+        );
 
+        editPasswordDialog.setVisible(true);
         enableTools();
+        updateTableModel();
 
         SwingUtilities.invokeLater(() -> editActionListenerInProgress = false);
     }
