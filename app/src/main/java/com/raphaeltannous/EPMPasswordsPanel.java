@@ -228,9 +228,9 @@ public class EPMPasswordsPanel extends JPanel {
     }
 
     protected void updateTableModel() {
-        DefaultTableModel newTableModel = getTableModel();
+        passwordsTableModel = getTableModel();
 
-        passwordsTable.setModel(newTableModel);
+        passwordsTable.setModel(passwordsTableModel);
 
         // Hiding the Id Column, but it will be still accessible by the code.
         passwordsTable.removeColumn(
@@ -240,7 +240,7 @@ public class EPMPasswordsPanel extends JPanel {
 
     private int getSelectedPasswordId() {
         int selectedRow = passwordsTable.getSelectedRow();
-        return Integer.parseInt((String) passwordsTable.getValueAt(selectedRow, 0));
+        return Integer.parseInt((String) passwordsTableModel.getValueAt(selectedRow, 0));
     }
 
     private void copyPasswordMenuItemActionListener() {
