@@ -47,6 +47,11 @@ public class PasswordManagerSQLite implements PasswordManagerInterface {
         + "WHERE id = ?;"
     );
 
+    private final String fetchPasswordDataStatement = (
+        "SELECT * FROM passwords "
+        + "WHERE id = ?;"
+    );
+
     private final String updateWebsiteStatement = (
         "UPDATE passwords SET website = ? "
         + "WHERE id = ?;"
@@ -348,6 +353,39 @@ public class PasswordManagerSQLite implements PasswordManagerInterface {
         }
 
         return password;
+    }
+
+    public String[] fetchPasswordData(int passwordId) {
+        if (!isPasswordInDB(passwordId)) {
+            throw new IllegalArgumentException("password is not in the database.");
+        }
+
+        String[] passwordData = new String[7];
+
+        try (
+            Connection connection = databaseConfig.withKey(this.databasePassword).build().createConnection(this.databaseURL);
+            PreparedStatement statement = connection.prepareStatement(fetchPasswordDataStatement);
+        ) {
+            statement.setQueryTimeout(30);
+
+            statement.setInt(1, passwordId);
+
+            ResultSet rs = statement.executeQuery();
+
+            passwordData = new String[] {
+                rs.getString("id"),
+                rs.getString("website"),
+                rs.getString("username"),
+                rs.getString("password"),
+                rs.getString("otp"),
+                rs.getString("hasBackupCodes"),
+                rs.getString("note")
+            };
+        } catch (SQLException e) {
+            e.printStackTrace(System.err);
+        }
+
+        return passwordData;
     }
 
     public void addPassword(String website, String username, String password) {
