@@ -63,6 +63,7 @@ public interface PasswordManagerInterface {
     public String fetchWebsite(int passwordId);
     public String fetchUsername(int passwordId);
     public String fetchPassword(int passwordId);
+    public String[] fetchPasswordData(int passwordId);
 
     // Website/Username/Password are required to be in a password and they cannot be empty.
     public void addPassword(
