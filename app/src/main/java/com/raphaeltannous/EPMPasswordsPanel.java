@@ -35,6 +35,7 @@ public class EPMPasswordsPanel extends JPanel {
     private boolean copyWebsiteActionListenerInProgress = false;
     private boolean copyUsernameActionListenerInProgress = false;
     private boolean copyPasswordActionListenerInProgress = false;
+    private boolean showOrUpdateTOTPMenuItemActionListenerInProgress = false;
 
     EPMPasswordsPanel(
         EPMFrame frame,
@@ -67,6 +68,7 @@ public class EPMPasswordsPanel extends JPanel {
         frame.copyWebsiteMenuItem.addActionListener(e -> copyWebsiteMenuItemActionListener());
         frame.copyUsernameMenuItem.addActionListener(e -> copyUsernameMenuItemActionListener());
         frame.copyPasswordMenuItem.addActionListener(e -> copyPasswordMenuItemActionListener());
+        frame.showOrUpdateTOTPMenuItem.addActionListener(e -> showOrUpdateTOTPMenuItemActionListener());
     }
 
     private void enableToolsOnSelection() {
@@ -81,6 +83,7 @@ public class EPMPasswordsPanel extends JPanel {
         frame.copyWebsiteMenuItem.setEnabled(status);
         frame.copyUsernameMenuItem.setEnabled(status);
         frame.copyPasswordMenuItem.setEnabled(status);
+        frame.showOrUpdateTOTPMenuItem.setEnabled(status);
     }
 
     private Object[][] databaseDataToTableData() {
@@ -112,6 +115,7 @@ public class EPMPasswordsPanel extends JPanel {
         JMenuItem copyWebsiteMenuItem = new JMenuItem();
         JMenuItem copyUsernameMenuItem = new JMenuItem();
         JMenuItem copyPasswordMenuItem = new JMenuItem();
+        JMenuItem showOrUpdateTOTPMenuItem = new JMenuItem();
 
         setLayout(new MigLayout("insets 0, fill"));
 
@@ -172,6 +176,13 @@ public class EPMPasswordsPanel extends JPanel {
             copyPasswordMenuItem.setIcon(new FlatSVGIcon("com/raphaeltannous/icons/key-copy.svg"));
             copyPasswordMenuItem.addActionListener(e -> copyPasswordMenuItemActionListener());
             passwordPopupMenu.add(copyPasswordMenuItem);
+            passwordPopupMenu.addSeparator();
+
+            // showOrUpdateTOTPMenuItem
+            showOrUpdateTOTPMenuItem.setText("Show Or Update TOTP");
+            showOrUpdateTOTPMenuItem.setIcon(new FlatSVGIcon("com/raphaeltannous/icons/clock-history.svg"));
+            showOrUpdateTOTPMenuItem.addActionListener(e -> showOrUpdateTOTPMenuItemActionListener());
+            passwordPopupMenu.add(showOrUpdateTOTPMenuItem);
         }
 
         passwordsTable.setComponentPopupMenu(passwordPopupMenu);

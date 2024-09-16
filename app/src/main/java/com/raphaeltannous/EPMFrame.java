@@ -35,6 +35,7 @@ public class EPMFrame extends JFrame {
     protected JMenuItem copyWebsiteMenuItem;
     protected JMenuItem copyUsernameMenuItem;
     protected JMenuItem copyPasswordMenuItem;
+    protected JMenuItem showOrUpdateTOTPMenuItem;
 
     protected Container contentPane;
 
@@ -66,6 +67,7 @@ public class EPMFrame extends JFrame {
         copyWebsiteMenuItem = new JMenuItem();
         copyUsernameMenuItem = new JMenuItem();
         copyPasswordMenuItem = new JMenuItem();
+        showOrUpdateTOTPMenuItem = new JMenuItem();
 
         JMenu toolsMenu = new JMenu();
         JMenuItem generatePasswordMenuItem = new JMenuItem();
@@ -185,6 +187,15 @@ public class EPMFrame extends JFrame {
                 copyPasswordMenuItem.setIcon(new FlatSVGIcon("com/raphaeltannous/icons/key-copy.svg"));
                 copyPasswordMenuItem.setEnabled(false);
                 passwordsMenu.add(copyPasswordMenuItem);
+                passwordsMenu.addSeparator();
+
+                // showTOTPMenuItem
+                showOrUpdateTOTPMenuItem.setText("Show Or Update TOTP");
+                showOrUpdateTOTPMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_T, InputEvent.CTRL_DOWN_MASK));
+                showOrUpdateTOTPMenuItem.setMnemonic('T');
+                showOrUpdateTOTPMenuItem.setIcon(new FlatSVGIcon("com/raphaeltannous/icons/clock-history.svg"));
+                showOrUpdateTOTPMenuItem.setEnabled(false);
+                passwordsMenu.add(showOrUpdateTOTPMenuItem);
             }
             menuBar.add(passwordsMenu);
 
