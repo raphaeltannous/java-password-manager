@@ -24,6 +24,7 @@ dependencies {
     implementation("com.formdev:flatlaf:3.5.1")
     implementation("com.formdev:flatlaf-extras:3.5.1")
     implementation("com.miglayout:miglayout-swing:5.3")
+    implementation("com.github.bastiaanjansen:otp-java:2.0.3")
 
     testImplementation("org.junit.jupiter:junit-jupiter:5.8.1")
 }
