@@ -220,6 +220,11 @@ public class EPMPasswordsPanel extends JPanel {
         DefaultTableModel newTableModel = getTableModel();
 
         passwordsTable.setModel(newTableModel);
+
+        // Hiding the Id Column, but it will be still accessible by the code.
+        passwordsTable.removeColumn(
+            passwordsTable.getColumnModel().getColumn(0)
+        );
     }
 
     private int getSelectedPasswordId() {
