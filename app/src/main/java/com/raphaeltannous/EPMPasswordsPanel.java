@@ -36,6 +36,7 @@ public class EPMPasswordsPanel extends JPanel {
     private boolean copyUsernameActionListenerInProgress = false;
     private boolean copyPasswordActionListenerInProgress = false;
     private boolean showOrUpdateTOTPMenuItemActionListenerInProgress = false;
+    private boolean showOrUpdateBackupCodesMenuItemActionListenerInProgress = false;
 
     EPMPasswordsPanel(
         EPMFrame frame,
@@ -69,6 +70,7 @@ public class EPMPasswordsPanel extends JPanel {
         frame.copyUsernameMenuItem.addActionListener(e -> copyUsernameMenuItemActionListener());
         frame.copyPasswordMenuItem.addActionListener(e -> copyPasswordMenuItemActionListener());
         frame.showOrUpdateTOTPMenuItem.addActionListener(e -> showOrUpdateTOTPMenuItemActionListener());
+        frame.showOrUpdateBackupCodesMenuItem.addActionListener(e -> showOrUpdateBackupCodesMenuItemActionListener());
     }
 
     private void enableToolsOnSelection() {
@@ -84,6 +86,7 @@ public class EPMPasswordsPanel extends JPanel {
         frame.copyUsernameMenuItem.setEnabled(status);
         frame.copyPasswordMenuItem.setEnabled(status);
         frame.showOrUpdateTOTPMenuItem.setEnabled(status);
+        frame.showOrUpdateBackupCodesMenuItem.setEnabled(status);
     }
 
     private Object[][] databaseDataToTableData() {
@@ -116,6 +119,7 @@ public class EPMPasswordsPanel extends JPanel {
         JMenuItem copyUsernameMenuItem = new JMenuItem();
         JMenuItem copyPasswordMenuItem = new JMenuItem();
         JMenuItem showOrUpdateTOTPMenuItem = new JMenuItem();
+        JMenuItem showOrUpdateBackupCodesMenuItem = new JMenuItem();
 
         setLayout(new MigLayout("insets 0, fill"));
 
@@ -183,6 +187,13 @@ public class EPMPasswordsPanel extends JPanel {
             showOrUpdateTOTPMenuItem.setIcon(new FlatSVGIcon("com/raphaeltannous/icons/clock-history.svg"));
             showOrUpdateTOTPMenuItem.addActionListener(e -> showOrUpdateTOTPMenuItemActionListener());
             passwordPopupMenu.add(showOrUpdateTOTPMenuItem);
+            passwordPopupMenu.addSeparator();
+
+            // showOrUpdateBackupCodesMenuItem
+            showOrUpdateBackupCodesMenuItem.setText("Show Or Update Backup Codes");
+            showOrUpdateBackupCodesMenuItem.setIcon(new FlatSVGIcon("com/raphaeltannous/icons/code-square.svg"));
+            showOrUpdateBackupCodesMenuItem.addActionListener(e -> showOrUpdateBackupCodesMenuItemActionListener());
+            passwordPopupMenu.add(showOrUpdateBackupCodesMenuItem);
         }
 
         passwordsTable.setComponentPopupMenu(passwordPopupMenu);
@@ -236,6 +247,20 @@ public class EPMPasswordsPanel extends JPanel {
         passwordsTable.removeColumn(
             passwordsTable.getColumnModel().getColumn(0)
         );
+    }
+
+    private void showOrUpdateBackupCodesMenuItemActionListener() {
+        if (showOrUpdateBackupCodesMenuItemActionListenerInProgress) {
+            return;
+        }
+
+        showOrUpdateBackupCodesMenuItemActionListenerInProgress = true;
+
+        // CODE HERE
+
+        enableTools();
+
+        SwingUtilities.invokeLater(() -> showOrUpdateBackupCodesMenuItemActionListenerInProgress = false);
     }
 
     private int getSelectedPasswordId() {
