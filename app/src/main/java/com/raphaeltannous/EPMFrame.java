@@ -36,6 +36,7 @@ public class EPMFrame extends JFrame {
     protected JMenuItem copyUsernameMenuItem;
     protected JMenuItem copyPasswordMenuItem;
     protected JMenuItem showOrUpdateTOTPMenuItem;
+    protected JMenuItem showOrUpdateBackupCodesMenuItem;
 
     protected Container contentPane;
 
@@ -68,6 +69,7 @@ public class EPMFrame extends JFrame {
         copyUsernameMenuItem = new JMenuItem();
         copyPasswordMenuItem = new JMenuItem();
         showOrUpdateTOTPMenuItem = new JMenuItem();
+        showOrUpdateBackupCodesMenuItem = new JMenuItem();
 
         JMenu toolsMenu = new JMenu();
         JMenuItem generatePasswordMenuItem = new JMenuItem();
@@ -189,13 +191,22 @@ public class EPMFrame extends JFrame {
                 passwordsMenu.add(copyPasswordMenuItem);
                 passwordsMenu.addSeparator();
 
-                // showTOTPMenuItem
+                // showOrUpdateTOTPMenuItem
                 showOrUpdateTOTPMenuItem.setText("Show Or Update TOTP");
                 showOrUpdateTOTPMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_T, InputEvent.CTRL_DOWN_MASK));
                 showOrUpdateTOTPMenuItem.setMnemonic('T');
                 showOrUpdateTOTPMenuItem.setIcon(new FlatSVGIcon("com/raphaeltannous/icons/clock-history.svg"));
                 showOrUpdateTOTPMenuItem.setEnabled(false);
                 passwordsMenu.add(showOrUpdateTOTPMenuItem);
+                passwordsMenu.addSeparator();
+
+                // showOrUpdateBackupCodesMenuItem
+                showOrUpdateBackupCodesMenuItem.setText("Show Or Update Backup Codes");
+                showOrUpdateBackupCodesMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_X, InputEvent.CTRL_DOWN_MASK));
+                showOrUpdateBackupCodesMenuItem.setMnemonic('B');
+                showOrUpdateBackupCodesMenuItem.setIcon(new FlatSVGIcon("com/raphaeltannous/icons/code-square.svg"));
+                showOrUpdateBackupCodesMenuItem.setEnabled(false);
+                passwordsMenu.add(showOrUpdateBackupCodesMenuItem);
             }
             menuBar.add(passwordsMenu);
 
