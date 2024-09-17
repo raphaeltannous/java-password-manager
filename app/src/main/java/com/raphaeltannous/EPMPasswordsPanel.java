@@ -320,8 +320,8 @@ public class EPMPasswordsPanel extends JPanel {
         );
 
         editPasswordDialog.setVisible(true);
-        enableTools();
         updateTableModel();
+        enableTools();
 
         SwingUtilities.invokeLater(() -> editActionListenerInProgress = false);
     }
@@ -340,6 +340,7 @@ public class EPMPasswordsPanel extends JPanel {
         );
 
         addPasswordDialog.setVisible(true);
+        updateTableModel();
         enableTools();
 
         SwingUtilities.invokeLater(() -> newActionListenerInProgress = false);
@@ -359,8 +360,8 @@ public class EPMPasswordsPanel extends JPanel {
         );
 
         totpDialog.setVisible(true);
-        enableTools();
         updateTableModel();
+        enableTools();
 
         SwingUtilities.invokeLater(() -> showOrUpdateTOTPMenuItemActionListenerInProgress = false);
     }
