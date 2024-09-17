@@ -170,6 +170,8 @@ public class EPMTOTPDialog extends JDialog {
     }
 
     private void okButtonActionListener() {
+        updateTOTPButtonActionListener();
+
         cancelButtonActionListener();
     }
 
@@ -183,13 +185,15 @@ public class EPMTOTPDialog extends JDialog {
 
         passwordsPanel.db.modifyOTP(this.passwordId, otpKey);
 
+        if (isLocaltOTPTimerRunning) {
+            localtOTPTimer.totpKey = otpKey;
+        }
+
         if (!isLocaltOTPTimerRunning && !otpKey.isEmpty()) {
             this.localtOTPTimer = new tOTPTimer(
                 totpLabel,
                 otpKey
             );
-
-            localtOTPTimer.totpKey = otpKey;
 
             this.timer = new Timer();
             this.timer.schedule(this.localtOTPTimer, 0, 1000);
