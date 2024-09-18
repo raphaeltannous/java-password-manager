@@ -1,22 +1,28 @@
 package com.raphaeltannous;
 
 import java.awt.Container;
+import java.awt.Cursor;
 import java.awt.Desktop;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
 
+import com.formdev.flatlaf.FlatClientProperties;
 import com.formdev.flatlaf.FlatLaf;
 import com.formdev.flatlaf.extras.FlatSVGIcon;
 import com.formdev.flatlaf.extras.FlatSVGUtils;
@@ -262,20 +268,7 @@ public class EPMFrame extends JFrame {
 
         documentationActionListenerInProrgress = true;
 
-        Desktop desktop = Desktop.getDesktop();
-        String urlLocation = "https://github.com/rofe33/java-password-manager";
-
-        if (Desktop.isDesktopSupported() && desktop.isSupported(Desktop.Action.BROWSE)) {
-            try {
-				URI url = new URI(urlLocation);
-
-                desktop.browse(url);
-			} catch (URISyntaxException e) {
-				e.printStackTrace(System.err);
-			} catch (IOException e) {
-				e.printStackTrace(System.err);
-            }
-        }
+        openInBrowser("https://github.com/rofe33/java-password-manager");
 
         SwingUtilities.invokeLater(() -> documentationActionListenerInProrgress = false);
     }
@@ -297,6 +290,23 @@ public class EPMFrame extends JFrame {
         SwingUtilities.invokeLater(() -> generatePasswordActionListenerInProgress = false);
     }
 
+    private void openInBrowser(String urlString) {
+        Desktop desktop = Desktop.getDesktop();
+        String urlLocation = urlString;
+
+        if (Desktop.isDesktopSupported() && desktop.isSupported(Desktop.Action.BROWSE)) {
+            try {
+				URI url = new URI(urlLocation);
+
+                desktop.browse(url);
+			} catch (URISyntaxException e) {
+				e.printStackTrace(System.err);
+			} catch (IOException e) {
+				e.printStackTrace(System.err);
+            }
+        }
+    }
+
     private void aboutActionListener() {
         if (aboutActionListenerInProgress) {
             return;
@@ -304,7 +314,34 @@ public class EPMFrame extends JFrame {
 
         aboutActionListenerInProgress = true;
 
-        // CODE HERE
+        JLabel titleLabel = new JLabel("Encrypted Password Manager");
+        titleLabel.putClientProperty(FlatClientProperties.STYLE_CLASS, "h1");
+
+        String link = "https://github.com/rofe33/java-password-manager";
+        JLabel linkLabel = new JLabel("<html><a href=\"#\">" + link + "</a></html>");
+        linkLabel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        linkLabel.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                openInBrowser("https://github.com/rofe33/java-password-manager");
+            }
+        });
+
+        JOptionPane.showMessageDialog(
+            this,
+            new Object[] {
+                titleLabel,
+                "To manage your passwords securely.",
+                " ",
+                "Licensed under The GPL-3.0 License.",
+                "Source code available at: ",
+                linkLabel,
+                " ",
+                "Created with ❤️ By Dina Houmani and Raphael Tannous."
+            },
+            "About",
+            JOptionPane.PLAIN_MESSAGE
+        );
 
         SwingUtilities.invokeLater(() -> aboutActionListenerInProgress = false);
     }
