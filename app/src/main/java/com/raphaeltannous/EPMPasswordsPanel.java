@@ -249,20 +249,6 @@ public class EPMPasswordsPanel extends JPanel {
         );
     }
 
-    private void showOrUpdateBackupCodesMenuItemActionListener() {
-        if (showOrUpdateBackupCodesMenuItemActionListenerInProgress) {
-            return;
-        }
-
-        showOrUpdateBackupCodesMenuItemActionListenerInProgress = true;
-
-        // CODE HERE
-
-        enableTools();
-
-        SwingUtilities.invokeLater(() -> showOrUpdateBackupCodesMenuItemActionListenerInProgress = false);
-    }
-
     private int getSelectedPasswordId() {
         int selectedRow = passwordsTable.getSelectedRow();
         return Integer.parseInt((String) passwordsTableModel.getValueAt(selectedRow, 0));
@@ -369,6 +355,27 @@ public class EPMPasswordsPanel extends JPanel {
         enableTools();
 
         SwingUtilities.invokeLater(() -> newActionListenerInProgress = false);
+    }
+
+    private void showOrUpdateBackupCodesMenuItemActionListener() {
+        if (showOrUpdateBackupCodesMenuItemActionListenerInProgress) {
+            return;
+        }
+
+        showOrUpdateBackupCodesMenuItemActionListenerInProgress = true;
+
+        EPMBackupCodesDialog backupCodesDialog = new EPMBackupCodesDialog(
+            this.frame,
+            this,
+            this.frame,
+            getSelectedPasswordId()
+        );
+
+        backupCodesDialog.setVisible(true);
+        updateTableModel();
+        enableTools();
+
+        SwingUtilities.invokeLater(() -> showOrUpdateBackupCodesMenuItemActionListenerInProgress = false);
     }
 
     private void showOrUpdateTOTPMenuItemActionListener() {
