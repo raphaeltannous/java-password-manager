@@ -152,7 +152,7 @@ public class EPMFrame extends JFrame {
                 // addPasswordMenuItem
                 newPasswordMenuItem.setText("New Password");
                 newPasswordMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, InputEvent.CTRL_DOWN_MASK));
-                newPasswordMenuItem.setMnemonic('A');
+                // newPasswordMenuItem.setMnemonic('A');
                 // BUG: For some reasons when the letter a is written in the dialog,
                 // it will also be taken as a keyboard shortcut and call the dialog
                 // once again. (Should be fixed) ?!
