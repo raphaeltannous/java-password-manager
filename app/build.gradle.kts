@@ -5,7 +5,7 @@
  * For more details on building Java & JVM projects, please refer to https://docs.gradle.org/8.7/userguide/building_java_projects.html in the Gradle documentation.
  */
 
-version = "0.1.0"
+version = "1.0.0"
 
 plugins {
     // Apply the application plugin to add support for building a CLI application in Java.
@@ -43,7 +43,7 @@ java {
 
 application {
     // Define the main class for the application.
-    mainClass = "com.raphaeltannous.App"
+    mainClass = "com.raphaeltannous.EPM"
 }
 
 tasks.test {
