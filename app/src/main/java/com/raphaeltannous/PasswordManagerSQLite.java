@@ -67,6 +67,11 @@ public class PasswordManagerSQLite implements PasswordManagerInterface {
         + "WHERE id = ?;"
     );
 
+    private final String updateBackupCodeStatement = (
+        "UPDATE backupCodes SET code = ? "
+        + "WHERE id = ?;"
+    );
+
     private final String deletePasswordStatement = (
         "DELETE FROM passwords "
         + "WHERE id = ?;"
@@ -115,6 +120,11 @@ public class PasswordManagerSQLite implements PasswordManagerInterface {
     private final String updateHasBackupCodeStatusStatement =  (
         "UPDATE passwords SET hasBackupCodes = ? "
         + "WHERE id = ?;"
+    );
+
+    private final String getBackupCodesCountStatement = (
+        "SELECT COUNT(*) FROM backupCodes "
+        + "WHERE passwordId  = ?;"
     );
 
     private final String isPasswordInDBStatement = (
@@ -744,13 +754,32 @@ public class PasswordManagerSQLite implements PasswordManagerInterface {
         }
     }
 
-    public void updateHasBackupCodeStatus(int passwordId, int status) {
-        if (!isPasswordInDB(passwordId)) {
-            throw new IllegalArgumentException("password is not in the database.");
+    private int getBackupCodesCount(int passwordId) {
+        int count = 0;
+
+        try (
+            Connection connection = databaseConfig.withKey(this.databasePassword).build().createConnection(this.databaseURL);
+            PreparedStatement statement = connection.prepareStatement(getBackupCodesCountStatement);
+        ) {
+            statement.setQueryTimeout(30);
+
+            statement.setInt(1, passwordId);
+
+            ResultSet rs = statement.executeQuery();
+
+            if (rs.next()) {
+                count = rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace(System.err);
         }
 
-        if (!(status == 1 || status == 0)) {
-            throw new IllegalArgumentException("status must be either 0 or 1.");
+        return count;
+    }
+
+    public void updateHasBackupCodeStatus(int passwordId) {
+        if (!isPasswordInDB(passwordId)) {
+            throw new IllegalArgumentException("password is not in the database.");
         }
 
         try (
@@ -759,8 +788,39 @@ public class PasswordManagerSQLite implements PasswordManagerInterface {
         ) {
             statement.setQueryTimeout(30);
 
+            int count = getBackupCodesCount(passwordId);
+            int status = 0;
+
+            if (count > 0) {
+                status = 1;
+            }
+
             statement.setInt(1, status);
             statement.setInt(2, passwordId);
+
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace(System.err);
+        }
+    }
+
+    public void modifyBackupCode(int backupCodeId, String newBackupCode) {
+        if (newBackupCode.isEmpty()) {
+            throw new IllegalArgumentException("newBackupCode cannot be empty.");
+        }
+
+        if (!isBackupCodeInDB(backupCodeId)) {
+            throw new IllegalArgumentException("backup code is not in the database.");
+        }
+
+        try (
+            Connection connection = databaseConfig.withKey(this.databasePassword).build().createConnection(this.databaseURL);
+            PreparedStatement statement = connection.prepareStatement(updateBackupCodeStatement);
+        ) {
+            statement.setQueryTimeout(30);
+
+            statement.setString(1, newBackupCode);
+            statement.setInt(2, backupCodeId);
 
             statement.executeUpdate();
         } catch (SQLException e) {

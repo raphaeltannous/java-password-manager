@@ -86,7 +86,8 @@ public interface PasswordManagerInterface {
 
     public List<String[]> fetchBackupCodes(int passwordId);
     public void addBackupCode(int passwordId, String backupCode); // backupCode cannot be empty if we are adding a backup code.
+    public void modifyBackupCode(int backupCodeId, String backupCode);
     public void removeBackupCode(int backupCodeId);
     public void updateBackupCodeStatus(int backupCodeId, int status); // status is 0 if backup code is not used otherwise 1.
-    public void updateHasBackupCodeStatus(int passwordId, int status);
+    public void updateHasBackupCodeStatus(int passwordId);
 }
