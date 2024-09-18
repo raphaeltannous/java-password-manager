@@ -163,7 +163,7 @@ public class EPMFrame extends JFrame {
                 // editPasswordMenuItem
                 editPasswordMenuItem.setText("Edit Password");
                 editPasswordMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_E, InputEvent.CTRL_DOWN_MASK));
-                editPasswordMenuItem.setMnemonic('E');
+                // editPasswordMenuItem.setMnemonic('E');
                 editPasswordMenuItem.setIcon(new FlatSVGIcon("com/raphaeltannous/icons/pencil-square.svg"));
                 editPasswordMenuItem.setEnabled(false);
                 passwordsMenu.add(editPasswordMenuItem);
