@@ -3,6 +3,7 @@ package com.raphaeltannous;
 import java.awt.Container;
 import java.awt.Cursor;
 import java.awt.Desktop;
+import java.awt.Dimension;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
@@ -94,6 +95,7 @@ public class EPMFrame extends JFrame {
         this.setTitle("EPM");
         this.setSize(777, 333);
         this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        this.setMinimumSize(new Dimension(777, 333));
         contentPane = getContentPane();
         contentPane.setLayout(new MigLayout("insets 0, fill"));
 
