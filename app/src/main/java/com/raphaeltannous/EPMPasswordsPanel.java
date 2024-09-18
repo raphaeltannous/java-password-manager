@@ -1,5 +1,7 @@
 package com.raphaeltannous;
 
+import java.awt.Color;
+import java.awt.Component;
 import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -12,8 +14,10 @@ import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellRenderer;
 
 import com.formdev.flatlaf.extras.FlatSVGIcon;
 
@@ -26,7 +30,7 @@ public class EPMPasswordsPanel extends JPanel {
     private EPMFrame frame;
     protected PasswordManagerInterface db;
 
-    private JTable passwordsTable;
+    private CustomTable passwordsTable;
     private DefaultTableModel passwordsTableModel;
 
     private boolean newActionListenerInProgress = false;
@@ -98,6 +102,12 @@ public class EPMPasswordsPanel extends JPanel {
         for (int i = 0; i < passwordsSize; i++) {
             Object[] row = passwords.get(i);
 
+            if (row[5].equals("1")) {
+                row[5] = "Yes";
+            } else {
+                row[5] = "No";
+            }
+
             convertedPasswords[i] = row;
         }
 
@@ -109,7 +119,7 @@ public class EPMPasswordsPanel extends JPanel {
         frame.closeMenuItem.setEnabled(true);
 
         JScrollPane scrollPane = new JScrollPane();
-        passwordsTable = new JTable();
+        passwordsTable = new CustomTable();
 
         JPopupMenu passwordPopupMenu = new JPopupMenu();
         JMenuItem newPasswordMenuItem = new JMenuItem();
@@ -131,7 +141,20 @@ public class EPMPasswordsPanel extends JPanel {
             passwordsTable.setModel(passwordsTableModel);
 
             passwordsTable.setAutoCreateRowSorter(true);
+
+            passwordsTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+
+
             scrollPane.setViewportView(passwordsTable);
+
+            passwordsTable.setBorder(null);
+            passwordsTable.getTableHeader().setBorder(null);
+            passwordsTable.setFocusable(false);
+
+            scrollPane.setBorder(null);
+            scrollPane.setViewportBorder(null);
+            scrollPane.getHorizontalScrollBar().setBorder(null);
+            scrollPane.getVerticalScrollBar().setBorder(null);
         }
 
         // Hiding the Id Column, but it will be still accessible by the code.
@@ -396,5 +419,24 @@ public class EPMPasswordsPanel extends JPanel {
         enableTools();
 
         SwingUtilities.invokeLater(() -> showOrUpdateTOTPMenuItemActionListenerInProgress = false);
+    }
+}
+
+class CustomTable extends JTable {
+    public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
+        Component cell = super.prepareRenderer(renderer, row, column);
+
+        Color gray = new Color(242, 242, 242);
+        Color white = Color.WHITE;
+
+        if (!cell.getBackground().equals(getSelectionBackground())) {
+            Color bg = (row % 2 == 0 ? gray : white);
+
+            cell.setBackground(bg);
+
+            bg = null;
+        }
+
+        return cell;
     }
 }
