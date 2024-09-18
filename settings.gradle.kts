@@ -9,5 +9,5 @@ plugins {
     // Apply the foojay-resolver plugin to allow automatic download of JDKs
 }
 
-rootProject.name = "java-password-manager"
+rootProject.name = "Encrypted Password Manager"
 include("app")

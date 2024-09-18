@@ -6,7 +6,7 @@ import javax.swing.JFrame;
 import com.formdev.flatlaf.FlatLightLaf;
 import com.formdev.flatlaf.util.SystemInfo;
 
-public class App {
+public class EPM {
 
     public static void main(String[] args) {
         FlatLightLaf.setup();
