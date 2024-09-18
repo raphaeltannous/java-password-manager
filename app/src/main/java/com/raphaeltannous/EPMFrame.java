@@ -1,8 +1,12 @@
 package com.raphaeltannous;
 
 import java.awt.Container;
+import java.awt.Desktop;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 import javax.swing.JFrame;
 import javax.swing.JMenu;
@@ -251,9 +255,29 @@ public class EPMFrame extends JFrame {
         contentPane.add(openAndCreatePanel, "align center");
     }
 
-    private Object documentationActionListener() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'documentationActionListener'");
+    private void documentationActionListener() {
+        if (documentationActionListenerInProrgress) {
+            return;
+        }
+
+        documentationActionListenerInProrgress = true;
+
+        Desktop desktop = Desktop.getDesktop();
+        String urlLocation = "https://github.com/rofe33/java-password-manager";
+
+        if (Desktop.isDesktopSupported() && desktop.isSupported(Desktop.Action.BROWSE)) {
+            try {
+				URI url = new URI(urlLocation);
+
+                desktop.browse(url);
+			} catch (URISyntaxException e) {
+				e.printStackTrace(System.err);
+			} catch (IOException e) {
+				e.printStackTrace(System.err);
+            }
+        }
+
+        SwingUtilities.invokeLater(() -> documentationActionListenerInProrgress = false);
     }
 
     protected void generatePasswordMenuItemActionListener(JPasswordField passwordField) {
