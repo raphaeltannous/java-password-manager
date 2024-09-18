@@ -159,7 +159,7 @@ class PasswordManagerSQLiteTest {
         db.addBackupCode(1, "5774d4761370");
 
         // Chaning Has Backup Code Status
-        db.updateHasBackupCodeStatus(1, 1);
+        db.updateHasBackupCodeStatus(1);
 
         db.addBackupCode(1, "6e56a0a66191");
 
