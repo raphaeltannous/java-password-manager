@@ -10,6 +10,8 @@ version = "0.1.0"
 plugins {
     // Apply the application plugin to add support for building a CLI application in Java.
     application
+    id("java")
+    id("edu.sc.seis.launch4j") version "3.0.6"
 }
 
 repositories {
@@ -40,6 +42,14 @@ java {
 // tasks.named<JavaExec>("run") {
 //     standardInput = System.`in`
 // }
+
+launch4j {
+  outfile = "epm.exe"
+  mainClassName = "com.raphaeltannous.App"
+
+  icon = "${projectDir}/epm.ico"
+  productName = "Encrypted Password Manager"
+}
 
 application {
     // Define the main class for the application.
